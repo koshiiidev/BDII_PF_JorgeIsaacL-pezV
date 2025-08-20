@@ -133,6 +133,8 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\HospitalesController.cs" />
     <Compile Include="Controllers\PacientesController.cs" />
+    <Compile Include="Controllers\PagosController.cs" />
+    <Compile Include="Controllers\TratamientosController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -184,7 +186,10 @@
     <Compile Include="Models\viewModels\Medicamento.cs" />
     <Compile Include="Models\viewModels\Paciente.cs" />
     <Compile Include="Models\viewModels\Pago.cs" />
+    <Compile Include="Models\viewModels\PagoCreate.cs" />
     <Compile Include="Models\viewModels\Tratamiento.cs" />
+    <Compile Include="Models\viewModels\TratamientoCreate.cs" />
+    <Compile Include="Models\viewModels\TratamientoDetalle.cs" />
     <Compile Include="Models\viewModels\TratamientoMedicamento.cs" />
     <Compile Include="Models\vw_citas_completas.cs">
       <DependentUpon>GestionHospitales.tt</DependentUpon>
@@ -285,6 +290,8 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Hospital\" />
+    <Folder Include="Views\Pagos\" />
+    <Folder Include="Views\Tratamientos\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />
