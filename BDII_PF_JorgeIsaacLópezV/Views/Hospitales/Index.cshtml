@@ -1,0 +1,66 @@
+﻿@model BDII_PF_JorgeIsaacLópezV.Models.viewModels.ListaHospitales
+
+@{
+    ViewBag.Title = "Gestion de Hospitales";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h2>Hospitales</h2>
+
+@if (!string.IsNullOrEmpty(Model.Mensaje))
+{
+    <div class="alert alert-@(Model.TipoMensaje == "success" ? "success" : Model.TipoMensaje == "error" ? "danger" : "info") alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        @Model.Mensaje
+    </div>
+}
+
+<p>
+    @Html.ActionLink("Crear Nuevo Hospital", "CrearHospital", null, new { @class = "btn btn-primary" })
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Dirección</th>
+            <th>Teléfono</th>
+            <th>Fecha Creación</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Hospitales != null && Model.Hospitales.Any())
+        {
+            foreach (var hospital in Model.Hospitales)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => hospital.Nombre)</td>
+                    <td>@Html.DisplayFor(modelItem => hospital.Direccion)</td>
+                    <td>@Html.DisplayFor(modelItem => hospital.Telefono)</td>
+                    <td>@Html.DisplayFor(modelItem => hospital.Fecha_Creacion)</td>
+                    <td>
+                        @if (hospital.Activo)
+                        {
+                            <span class="label label-success">Activo</span>
+                        }
+                        else
+                        {
+                            <span class="label label-default">Inactivo</span>
+                        }
+                    </td>
+                    <td>
+                        @Html.ActionLink("Editar", "EditarHospital", new { id = hospital.Id_Hospital }, new { @class = "btn btn-sm btn-warning" })
+                        @Html.ActionLink("Detalles", "DetallesHospital", new { id = hospital.Id_Hospital }, new { @class = "btn btn-sm btn-info" })
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="6" class="text-center">No hay hospitales registrados.</td>
+            </tr>
+        }
+    </tbody>
+</table>

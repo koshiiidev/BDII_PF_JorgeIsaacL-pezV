@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="f1f9541e62d74a8a8da98064c7729185" Name="Diagram1" ZoomLevel="83">
+        <EntityTypeShape EntityType="GestionHospitalesModel.auditoria_pagos" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="GestionHospitalesModel.Citas" Width="1.5" PointX="5.25" PointY="13" IsExpanded="true" />
+        <EntityTypeShape EntityType="GestionHospitalesModel.Doctores" Width="1.5" PointX="3" PointY="9.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="GestionHospitalesModel.Hospitales" Width="1.5" PointX="0.75" PointY="9.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="GestionHospitalesModel.Medicamentos" Width="1.5" PointX="3" PointY="13.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="GestionHospitalesModel.Pacientes" Width="1.5" PointX="3" PointY="16.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="GestionHospitalesModel.Pagos" Width="1.5" PointX="9.75" PointY="15.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="GestionHospitalesModel.Tratamiento_Medicamento" Width="1.5" PointX="9.75" PointY="12.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="GestionHospitalesModel.Tratamientos" Width="1.5" PointX="7.5" PointY="13.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="GestionHospitalesModel.vw_citas_completas" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="GestionHospitalesModel.vw_pagos_paciente" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="GestionHospitalesModel.vw_tratamientos_medicamentos" Width="1.5" PointX="0.75" PointY="4.75" IsExpanded="true" />
+        <AssociationConnector Association="GestionHospitalesModel.fk_citas_doctor" ManuallyRouted="false" />
+        <AssociationConnector Association="GestionHospitalesModel.fk_citas_hospital" ManuallyRouted="false" />
+        <AssociationConnector Association="GestionHospitalesModel.fk_citas_paciente" ManuallyRouted="false" />
+        <AssociationConnector Association="GestionHospitalesModel.fk_tratamientos_cita" ManuallyRouted="false" />
+        <AssociationConnector Association="GestionHospitalesModel.fk_doctores_hospital" ManuallyRouted="false" />
+        <AssociationConnector Association="GestionHospitalesModel.fk_medicamentos_hospital" ManuallyRouted="false" />
+        <AssociationConnector Association="GestionHospitalesModel.fk_pacientes_hospital" ManuallyRouted="false" />
+        <AssociationConnector Association="GestionHospitalesModel.fk_trat_med_medicamento" ManuallyRouted="false" />
+        <AssociationConnector Association="GestionHospitalesModel.fk_pagos_paciente" ManuallyRouted="false" />
+        <AssociationConnector Association="GestionHospitalesModel.fk_pagos_tratamiento" ManuallyRouted="false" />
+        <AssociationConnector Association="GestionHospitalesModel.fk_trat_med_tratamiento" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

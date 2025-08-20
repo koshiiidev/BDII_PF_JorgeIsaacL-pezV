@@ -1,0 +1,211 @@
+﻿@model BDII_PF_JorgeIsaacLópezV.Models.Citas
+
+@{
+    ViewBag.Title = "Editar Cita";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0">
+                        <i class="fas fa-edit"></i> Editar Cita Médica
+                    </h3>
+                </div>
+
+                <div class="card-body">
+                    @if (TempData["Mensaje"] != null)
+                    {
+                        <div class="alert alert-@(TempData["TipoMensaje"].ToString() == "error" ? "danger" : TempData["TipoMensaje"]) alert-dismissible fade show" role="alert">
+                            @TempData["Mensaje"]
+                            <button type="button" class="close" data-dismiss="alert">
+                                <span>&times;</span>
+                            </button>
+                        </div>
+                    }
+
+                    @using (Html.BeginForm("EditarCita", "Citas", FormMethod.Post, new { @class = "needs-validation", novalidate = "novalidate" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(m => m.id_cita)
+                        @Html.HiddenFor(m => m.fecha_creacion)
+
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="id_hospital" class="form-label">Hospital *</label>
+                                @Html.DropDownListFor(m => m.id_hospital, (SelectList)ViewBag.Hospitales, "-- Seleccione Hospital --", new
+                                {
+                                    @class = "form-control",
+                                    id = "hospitalSelect",
+                                    required = "required"
+                                })
+                                @Html.ValidationMessageFor(m => m.id_hospital, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                <label for="id_doctor" class="form-label">Doctor *</label>
+                                @Html.DropDownListFor(m => m.id_doctor, (SelectList)ViewBag.Doctores, "-- Seleccione Doctor --", new
+                                {
+                                    @class = "form-control",
+                                    id = "doctorSelect",
+                                    required = "required"
+                                })
+                                @Html.ValidationMessageFor(m => m.id_doctor, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label for="id_paciente" class="form-label">Paciente *</label>
+                                @Html.DropDownListFor(m => m.id_paciente, (SelectList)ViewBag.Pacientes, "-- Seleccione Paciente --", new
+                                {
+                                    @class = "form-control",
+                                    id = "pacienteSelect",
+                                    required = "required"
+                                })
+                                @Html.ValidationMessageFor(m => m.id_paciente, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="fecha" class="form-label">Fecha *</label>
+                                @Html.TextBoxFor(m => m.fecha, "{0:yyyy-MM-dd}", new
+                                {
+                                    @class = "form-control",
+                                    type = "date",
+                                    required = "required"
+                                })
+                                @Html.ValidationMessageFor(m => m.fecha, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="form-group col-md-4">
+                                <label for="hora" class="form-label">Hora *</label>
+                                @Html.TextBoxFor(m => m.hora, "{0:hh\\:mm}", new
+                                {
+                                    @class = "form-control",
+                                    type = "time",
+                                    required = "required"
+                                })
+                                @Html.ValidationMessageFor(m => m.hora, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="form-group col-md-4">
+                                <label for="estado" class="form-label">Estado *</label>
+                                @Html.DropDownListFor(m => m.estado, (SelectList)ViewBag.Estados, new
+                                {
+                                    @class = "form-control",
+                                    required = "required"
+                                })
+                                @Html.ValidationMessageFor(m => m.estado, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="diagnostico" class="form-label">Diagnóstico</label>
+                            @Html.TextAreaFor(m => m.diagnostico, new
+                            {
+                                @class = "form-control",
+                                rows = "3",
+                                placeholder = "Escriba el diagnóstico o motivo de la consulta (opcional)"
+                            })
+                            @Html.ValidationMessageFor(m => m.diagnostico, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i>
+                            <strong>Información:</strong> Esta cita fue creada el @Model.fecha_creacion?.ToString("dd/MM/yyyy HH:mm")
+                        </div>
+
+                        @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+
+                        <div class="form-actions mt-4">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Actualizar Cita
+                            </button>
+                            @Html.ActionLink("Cancelar", "Index", null, new { @class = "btn btn-secondary ml-2" })
+                            @Html.ActionLink("Ver Detalles", "DetallesCitas", new { id = Model.id_cita }, new { @class = "btn btn-info ml-2" })
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Cuando se selecciona un hospital
+            $('#hospitalSelect').change(function() {
+                var hospitalId = $(this).val();
+                var doctorSelect = $('#doctorSelect');
+                var pacienteSelect = $('#pacienteSelect');
+
+                if (hospitalId) {
+                    // Cargar doctores
+                    $.get('@Url.Action("GetDoctoresPorHospital", "Citas")', { hospitalId: hospitalId })
+                        .done(function(data) {
+                            var currentDoctor = '@Model.id_doctor';
+                            doctorSelect.html('<option value="">-- Seleccione Doctor --</option>');
+                            $(data).each(function(index, item) {
+                                var selected = (item.id_doctor == currentDoctor) ? 'selected' : '';
+                                doctorSelect.append('<option value="' + item.id_doctor + '" ' + selected + '>' + item.nombre_completo + '</option>');
+                            });
+                        })
+                        .fail(function() {
+                            doctorSelect.html('<option value="">Error al cargar doctores</option>');
+                        });
+
+                    // Cargar pacientes
+                    $.get('@Url.Action("GetPacientesPorHospital", "Citas")', { hospitalId: hospitalId })
+                        .done(function(data) {
+                            var currentPaciente = '@Model.id_paciente';
+                            pacienteSelect.html('<option value="">-- Seleccione Paciente --</option>');
+                            $(data).each(function(index, item) {
+                                var selected = (item.id_paciente == currentPaciente) ? 'selected' : '';
+                                pacienteSelect.append('<option value="' + item.id_paciente + '" ' + selected + '>' + item.nombre_completo + '</option>');
+                            });
+                        })
+                        .fail(function() {
+                            pacienteSelect.html('<option value="">Error al cargar pacientes</option>');
+                        });
+                }
+            });
+
+            // Trigger change event on page load to populate dropdowns
+            if ($('#hospitalSelect').val()) {
+                $('#hospitalSelect').trigger('change');
+            }
+
+            // Validación del formulario
+            $('.needs-validation').on('submit', function(event) {
+                if (this.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                $(this).addClass('was-validated');
+            });
+
+            // Validación especial para fechas pasadas en citas programadas
+            $('form').on('submit', function(e) {
+                var estado = $('#estado').val();
+                var fecha = new Date($('#fecha').val());
+                var hoy = new Date();
+                hoy.setHours(0,0,0,0);
+
+                if (estado === 'programada' && fecha < hoy) {
+                    e.preventDefault();
+                    alert('No se puede programar una cita en una fecha pasada.');
+                    return false;
+                }
+            });
+
+            // Auto-hide alerts
+            setTimeout(function() {
+                $('.alert').fadeOut();
+            }, 5000);
+        });
+    </script>
+}

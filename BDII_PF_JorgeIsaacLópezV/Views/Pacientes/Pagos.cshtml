@@ -1,0 +1,119 @@
+﻿@model IEnumerable<BDII_PF_JorgeIsaacLópezV.Models.viewModels.Pago>
+
+@{
+    ViewBag.Title = "Pagos del Paciente";
+    var paciente = ViewBag.Paciente as BDII_PF_JorgeIsaacLópezV.Models.Pacientes;
+}
+
+<h2>Historial de Pagos</h2>
+
+@if (paciente != null)
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Información del Paciente</h3>
+        </div>
+        <div class="panel-body">
+            <strong>@paciente.nombre @paciente.apellidos</strong> -
+            <em>Identificación: @paciente.identificacion</em>
+        </div>
+    </div>
+}
+
+@if (Model != null && Model.Any())
+{
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Resumen de Pagos</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <strong>Total de Pagos:</strong> @Model.Count()
+                        </div>
+                        <div class="col-md-4">
+                            <strong>Monto Total:</strong> ₡@Model.Sum(p => p.monto ?? 0).ToString("N2")
+                        </div>
+                        <div class="col-md-4">
+                            <strong>Último Pago:</strong> @Model.Max(p => p.fecha)?.ToString("dd/MM/yyyy")
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Monto</th>
+                    <th>Método de Pago</th>
+                    <th>Concepto</th>
+                    <th>Cita Relacionada</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var pago in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => pago.fecha)</td>
+                        <td class="text-right">₡@Html.DisplayFor(modelItem => pago.monto)</td>
+                        <td>@Html.DisplayFor(modelItem => pago.metodo_pago)</td>
+                        <td>@Html.DisplayFor(modelItem => pago.concepto)</td>
+                        <td>
+                            @if (pago.Citas != null)
+                            {
+                                @($"Cita del {pago.Citas.fecha?.ToString("dd/MM/yyyy")} - {pago.Citas.motivo}")
+                            }
+                            else if (pago.Tratamiento_Medicamento != null)
+                            {
+                                <em>Tratamiento/Medicamento</em>
+                            }
+                            else
+                            {
+                                <em>No especificado</em>
+                            }
+                        </td>
+                        <td>
+                            @if (pago.estado == "Pagado" || pago.estado == "Completado")
+                            {
+                                <span class="label label-success">@pago.estado</span>
+                            }
+                            else if (pago.estado == "Pendiente")
+                            {
+                                <span class="label label-warning">@pago.estado</span>
+                            }
+                            else
+                            {
+                                <span class="label label-default">@pago.estado</span>
+                            }
+                        </td>
+                        <td>
+                            <a href="#" class="btn btn-xs btn-info">Ver Detalles</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="alert alert-info">
+        <strong>Sin pagos registrados.</strong> Este paciente no tiene historial de pagos.
+    </div>
+}
+
+<p>
+    @if (paciente != null)
+    {
+        @Html.ActionLink("Volver a Detalles", "DetallesPacientes", new { id = paciente.id_paciente }, new { @class = "btn btn-default" })
+    }
+    @Html.ActionLink("Volver a Lista de Pacientes", "Index", null, new { @class = "btn btn-primary" })
+</p>

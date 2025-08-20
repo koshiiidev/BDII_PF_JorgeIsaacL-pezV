@@ -1,0 +1,116 @@
+﻿@model BDII_PF_JorgeIsaacLópezV.Models.viewModels.Hospital
+@{
+    ViewBag.Title = "Detalles del Hospital";
+}
+
+<h2>Detalles del Hospital</h2>
+
+<div>
+    <h4>Información del Hospital</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Nombre)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Nombre)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Direccion)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Direccion)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Telefono)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Telefono)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Fecha_Creacion)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Fecha_Creacion)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Activo)
+        </dt>
+        <dd>
+            @if (Model.Activo)
+            {
+                <span class="label label-success">Activo</span>
+            }
+            else
+            {
+                <span class="label label-default">Inactivo</span>
+            }
+        </dd>
+    </dl>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h4>Estadísticas del Hospital</h4>
+        <hr />
+
+        <div class="row">
+            <div class="col-md-3">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Doctores</h3>
+                    </div>
+                    <div class="panel-body text-center">
+                        <h2>@ViewBag.TotalDoctores</h2>
+                        <p>Total de doctores</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Pacientes</h3>
+                    </div>
+                    <div class="panel-body text-center">
+                        <h2>@ViewBag.TotalPacientes</h2>
+                        <p>Total de pacientes</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Medicamentos</h3>
+                    </div>
+                    <div class="panel-body text-center">
+                        <h2>@ViewBag.TotalMedicamentos</h2>
+                        <p>Total de medicamentos</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="panel panel-warning">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Citas</h3>
+                    </div>
+                    <div class="panel-body text-center">
+                        <h2>@ViewBag.TotalCitas</h2>
+                        <p>Total de citas</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<p class="text-center">
+    @Html.ActionLink("Editar", "EditarHospital", new { id = Model.Id_Hospital }, new { @class = "btn btn-warning" })
+    @Html.ActionLink("Volver a la Lista", "Index", null, new { @class = "btn btn-default" })
+</p>

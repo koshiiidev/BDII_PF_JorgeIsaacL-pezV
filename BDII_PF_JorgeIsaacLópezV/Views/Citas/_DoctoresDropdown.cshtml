@@ -1,0 +1,7 @@
+﻿@model IEnumerable<object>
+
+@foreach (var doctor in Model)
+{
+    var doctorObj = doctor as dynamic;
+    <option value="@doctorObj.id_doctor">@doctorObj.nombre_completo</option>
+}

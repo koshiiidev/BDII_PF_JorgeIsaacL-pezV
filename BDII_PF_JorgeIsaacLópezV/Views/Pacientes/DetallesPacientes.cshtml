@@ -1,0 +1,144 @@
+﻿@model BDII_PF_JorgeIsaacLópezV.Models.viewModels.Paciente
+
+@{
+    ViewBag.Title = "Detalles del Paciente";
+}
+
+<h2>Detalles del Paciente</h2>
+
+<div>
+    <h4>Información Personal</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Nombre)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Nombre)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Apellidos)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Apellidos)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Identificacion)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Identificacion)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Fecha_Nacimiento)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Fecha_Nacimiento)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Genero)
+        </dt>
+        <dd>
+            @if (Model.Genero == 'M')
+            {
+                <span class="label label-primary">Masculino</span>
+            }
+            else
+            {
+                <span class="label label-info">Femenino</span>
+            }
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Direccion)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Direccion)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Telefono)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Telefono)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Fecha_Registro)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Fecha_Registro)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Activo)
+        </dt>
+        <dd>
+            @if (Model.Activo)
+            {
+                <span class="label label-success">Activo</span>
+            }
+            else
+            {
+                <span class="label label-default">Inactivo</span>
+            }
+        </dd>
+    </dl>
+</div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <h4>Resumen de Actividades</h4>
+            <hr />
+
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Citas</h3>
+                        </div>
+                        <div class="panel-body text-center">
+                            <h2>@ViewBag.TotalCitas</h2>
+                            <p>Total de citas</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Pagos</h3>
+                        </div>
+                        <div class="panel-body text-center">
+                            <h2>@ViewBag.TotalPagos</h2>
+                            <p>Total de pagos</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="panel panel-warning">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Doctores</h3>
+                        </div>
+                        <div class="panel-body text-center">
+                            <h2>@ViewBag.TotalDoctores</h2>
+                            <p>Doctores asignados</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<p class="text-center">
+    @Html.ActionLink("Editar", "EditarPaciente", new { id = Model.Id_Paciente }, new { @class = "btn btn-warning" })
+    @Html.ActionLink("Ver Citas", "Citas", new { id = Model.Id_Paciente }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("Ver Pagos", "Pagos", new { id = Model.Id_Paciente }, new { @class = "btn btn-success" })
+    @Html.ActionLink("Volver a la Lista", "Index", null, new { @class = "btn btn-default" })
+</p>

@@ -1,0 +1,334 @@
+﻿@model BDII_PF_JorgeIsaacLópezV.Models.Citas
+
+@{
+    ViewBag.Title = "Detalles de la Cita";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-10 offset-md-1">
+            @if (TempData["Mensaje"] != null)
+            {
+                <div class="alert alert-@(TempData["TipoMensaje"].ToString() == "error" ? "danger" : TempData["TipoMensaje"]) alert-dismissible fade show" role="alert">
+                    @TempData["Mensaje"]
+                    <button type="button" class="close" data-dismiss="alert">
+                        <span>&times;</span>
+                    </button>
+                </div>
+            }
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h3 class="mb-0">
+                            <i class="fas fa-eye"></i> Detalles de la Cita Médica
+                        </h3>
+                        <div>
+                            @if (Model.estado == "programada")
+                            {
+                                <span class="badge badge-warning badge-lg">@Model.estado.ToUpper()</span>
+                            }
+                            else if (Model.estado == "completada")
+                            {
+                                <span class="badge badge-success badge-lg">@Model.estado.ToUpper()</span>
+                            }
+                            else if (Model.estado == "cancelada")
+                            {
+                                <span class="badge badge-danger badge-lg">@Model.estado.ToUpper()</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Información básica de la cita -->
+                        <div class="col-md-6">
+                            <div class="card mb-4">
+                                <div class="card-header bg-primary text-white">
+                                    <h5 class="mb-0"><i class="fas fa-calendar-alt"></i> Información de la Cita</h5>
+                                </div>
+                                <div class="card-body">
+                                    <dl class="row">
+                                        <dt class="col-sm-4">ID Cita:</dt>
+                                        <dd class="col-sm-8">#@Model.id_cita</dd>
+
+                                        <dt class="col-sm-4">Fecha:</dt>
+                                        <dd class="col-sm-8">
+                                            <i class="fas fa-calendar"></i> @Model.fecha.ToString("dddd, dd 'de' MMMM 'de' yyyy", new System.Globalization.CultureInfo("es-ES"))
+                                        </dd>
+
+                                        <dt class="col-sm-4">Hora:</dt>
+                                        <dd class="col-sm-8">
+                                            <i class="fas fa-clock"></i> @Model.hora.ToString(@"hh\:mm")
+                                        </dd>
+
+                                        <dt class="col-sm-4">Estado:</dt>
+                                        <dd class="col-sm-8">
+                                            @if (Model.estado == "programada")
+                                            {
+                                                <span class="badge badge-warning">Programada</span>
+                                            }
+                                            else if (Model.estado == "completada")
+                                            {
+                                                <span class="badge badge-success">Completada</span>
+                                            }
+                                            else if (Model.estado == "cancelada")
+                                            {
+                                                <span class="badge badge-danger">Cancelada</span>
+                                            }
+                                        </dd>
+
+                                        <dt class="col-sm-4">Creada:</dt>
+                                        <dd class="col-sm-8">
+                                            <i class="fas fa-plus-circle"></i> @Model.fecha_creacion?.ToString("dd/MM/yyyy HH:mm")
+                                        </dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Información del hospital -->
+                        <div class="col-md-6">
+                            <div class="card mb-4">
+                                <div class="card-header bg-info text-white">
+                                    <h5 class="mb-0"><i class="fas fa-hospital"></i> Hospital</h5>
+                                </div>
+                                <div class="card-body">
+                                    @if (Model.Hospitales != null)
+                                    {
+                                        <dl class="row">
+                                            <dt class="col-sm-4">Nombre:</dt>
+                                            <dd class="col-sm-8">@Model.Hospitales.nombre</dd>
+
+                                            <dt class="col-sm-4">Dirección:</dt>
+                                            <dd class="col-sm-8">@Model.Hospitales.direccion</dd>
+
+                                            <dt class="col-sm-4">Teléfono:</dt>
+                                            <dd class="col-sm-8">
+                                                @if (!string.IsNullOrEmpty(Model.Hospitales.telefono))
+                                                {
+                                                    <i class="fas fa-phone"></i> @Model.Hospitales.telefono
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">No disponible</span>
+                                                }
+                                            </dd>
+                                        </dl>
+                                    }
+                                    else
+                                    {
+                                        <p class="text-muted">Información del hospital no disponible</p>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- Información del doctor -->
+                        <div class="col-md-6">
+                            <div class="card mb-4">
+                                <div class="card-header bg-success text-white">
+                                    <h5 class="mb-0"><i class="fas fa-user-md"></i> Doctor</h5>
+                                </div>
+                                <div class="card-body">
+                                    @if (Model.Doctores != null)
+                                    {
+                                        <dl class="row">
+                                            <dt class="col-sm-4">Nombre:</dt>
+                                            <dd class="col-sm-8">@Model.Doctores.nombre @Model.Doctores.apellidos</dd>
+
+                                            <dt class="col-sm-4">Especialidad:</dt>
+                                            <dd class="col-sm-8">
+                                                <span class="badge badge-info">@Model.Doctores.especialidad</span>
+                                            </dd>
+
+                                            <dt class="col-sm-4">Teléfono:</dt>
+                                            <dd class="col-sm-8">
+                                                @if (!string.IsNullOrEmpty(Model.Doctores.telefono))
+                                                {
+                                                    <i class="fas fa-phone"></i> @Model.Doctores.telefono
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">No disponible</span>
+                                                }
+                                            </dd>
+
+                                            <dt class="col-sm-4">Email:</dt>
+                                            <dd class="col-sm-8">
+                                                @if (!string.IsNullOrEmpty(Model.Doctores.email))
+                                                {
+                                                    <i class="fas fa-envelope"></i> @Model.Doctores.email
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">No disponible</span>
+                                                }
+                                            </dd>
+                                        </dl>
+                                    }
+                                    else
+                                    {
+                                        <p class="text-muted">Información del doctor no disponible</p>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Información del paciente -->
+                        <div class="col-md-6">
+                            <div class="card mb-4">
+                                <div class="card-header bg-warning text-white">
+                                    <h5 class="mb-0"><i class="fas fa-user"></i> Paciente</h5>
+                                </div>
+                                <div class="card-body">
+                                    @if (Model.Pacientes != null)
+                                    {
+                                        <dl class="row">
+                                            <dt class="col-sm-4">Nombre:</dt>
+                                            <dd class="col-sm-8">@Model.Pacientes.nombre @Model.Pacientes.apellidos</dd>
+
+                                            <dt class="col-sm-4">Fecha Nac.:</dt>
+                                            <dd class="col-sm-8">
+                                                <i class="fas fa-birthday-cake"></i> @Model.Pacientes.fecha_nacimiento.ToString("dd/MM/yyyy")
+                                            </dd>
+
+                                            <dt class="col-sm-4">Teléfono:</dt>
+                                            <dd class="col-sm-8">
+                                                @if (!string.IsNullOrEmpty(Model.Pacientes.telefono))
+                                                {
+                                                    <i class="fas fa-phone"></i> @Model.Pacientes.telefono
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">No disponible</span>
+                                                }
+                                            </dd>
+
+                                            <dt class="col-sm-4">Dirección:</dt>
+                                            <dd class="col-sm-8">
+                                                @if (!string.IsNullOrEmpty(Model.Pacientes.direccion))
+                                                {
+                                                    <i class="fas fa-map-marker-alt"></i> @Model.Pacientes.direccion
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">No disponible</span>
+                                                }
+                                            </dd>
+                                        </dl>
+                                    }
+                                    else
+                                    {
+                                        <p class="text-muted">Información del paciente no disponible</p>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Diagnóstico -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card mb-4">
+                                <div class="card-header bg-secondary text-white">
+                                    <h5 class="mb-0"><i class="fas fa-notes-medical"></i> Diagnóstico</h5>
+                                </div>
+                                <div class="card-body">
+                                    @if (!string.IsNullOrEmpty(Model.diagnostico))
+                                    {
+                                        <p class="mb-0">@Model.diagnostico</p>
+                                    }
+                                    else
+                                    {
+                                        <p class="text-muted mb-0">
+                                            <i class="fas fa-info-circle"></i> No se ha registrado diagnóstico para esta cita.
+                                        </p>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tratamientos asociados -->
+                    @if (Model.Tratamientos != null && Model.Tratamientos.Any())
+                    {
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card mb-4">
+                                    <div class="card-header bg-primary text-white">
+                                        <h5 class="mb-0"><i class="fas fa-pills"></i> Tratamientos Asociados</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-sm table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Medicamento</th>
+                                                        <th>Dosis</th>
+                                                        <th>Duración</th>
+                                                        <th>Estado</th>
+                                                    </tr>
+                                                </thead>
+                                                
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <!-- Acciones -->
+                    <div class="form-actions mt-4">
+                        <div class="btn-toolbar" role="toolbar">
+                            <div class="btn-group mr-2" role="group">
+                                @Html.ActionLink("Volver a Lista", "Index", null, new { @class = "btn btn-secondary" })
+                            </div>
+
+                            @if (Model.estado == "programada")
+                            {
+                                <div class="btn-group mr-2" role="group">
+                                    @Html.ActionLink("Editar", "EditarCita", new { id = Model.id_cita }, new { @class = "btn btn-warning" })
+                                    @Html.ActionLink("Completar", "Completar", new { id = Model.id_cita }, new
+                                    {
+                                        @class = "btn btn-success",
+                                        onclick = "return confirm('¿Está seguro que desea marcar esta cita como completada?')"
+                                    })
+                                    @Html.ActionLink("Cancelar", "Cancelar", new { id = Model.id_cita }, new
+                                    {
+                                        @class = "btn btn-danger",
+                                        onclick = "return confirm('¿Está seguro que desea cancelar esta cita?')"
+                                    })
+                                </div>
+                            }
+                            else if (Model.estado == "cancelada")
+                            {
+                                <div class="btn-group mr-2" role="group">
+                                    @Html.ActionLink("Editar", "EditarCita", new { id = Model.id_cita }, new { @class = "btn btn-warning" })
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Auto-hide alerts
+            setTimeout(function () {
+                $('.alert').fadeOut();
+            }, 5000);
+
+            // Tooltip para badges
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+}

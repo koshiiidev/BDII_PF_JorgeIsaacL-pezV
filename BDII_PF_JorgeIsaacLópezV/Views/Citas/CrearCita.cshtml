@@ -1,0 +1,181 @@
+﻿@model BDII_PF_JorgeIsaacLópezV.Models.Citas
+
+@{
+    ViewBag.Title = "Crear Nueva Cita";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0">
+                        <i class="fas fa-calendar-plus"></i> Crear Nueva Cita Médica
+                    </h3>
+                </div>
+
+                <div class="card-body">
+                    @if (TempData["Mensaje"] != null)
+                    {
+                        <div class="alert alert-@(TempData["TipoMensaje"].ToString() == "error" ? "danger" : TempData["TipoMensaje"]) alert-dismissible fade show" role="alert">
+                            @TempData["Mensaje"]
+                            <button type="button" class="close" data-dismiss="alert">
+                                <span>&times;</span>
+                            </button>
+                        </div>
+                    }
+
+                    @using (Html.BeginForm("CrearCita", "Citas", FormMethod.Post, new { @class = "needs-validation", novalidate = "novalidate" }))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="id_hospital" class="form-label">Hospital *</label>
+                                @Html.DropDownListFor(m => m.id_hospital, (SelectList)ViewBag.Hospitales, "-- Seleccione Hospital --", new
+                                {
+                                    @class = "form-control",
+                                    id = "hospitalSelect",
+                                    required = "required"
+                                })
+                                @Html.ValidationMessageFor(m => m.id_hospital, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                <label for="id_doctor" class="form-label">Doctor *</label>
+                                @Html.DropDownListFor(m => m.id_doctor, (SelectList)ViewBag.Doctores, "-- Seleccione Doctor --", new
+                                {
+                                    @class = "form-control",
+                                    id = "doctorSelect",
+                                    required = "required",
+                                    disabled = "disabled"
+                                })
+                                @Html.ValidationMessageFor(m => m.id_doctor, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label for="id_paciente" class="form-label">Paciente *</label>
+                                @Html.DropDownListFor(m => m.id_paciente, (SelectList)ViewBag.Pacientes, "-- Seleccione Paciente --", new
+                                {
+                                    @class = "form-control",
+                                    id = "pacienteSelect",
+                                    required = "required",
+                                    disabled = "disabled"
+                                })
+                                @Html.ValidationMessageFor(m => m.id_paciente, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="fecha" class="form-label">Fecha *</label>
+                                @Html.TextBoxFor(m => m.fecha, "{0:yyyy-MM-dd}", new
+                                {
+                                    @class = "form-control",
+                                    type = "date",
+                                    required = "required",
+                                    min = DateTime.Today.ToString("yyyy-MM-dd")
+                                })
+                                @Html.ValidationMessageFor(m => m.fecha, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                <label for="hora" class="form-label">Hora *</label>
+                                @Html.TextBoxFor(m => m.hora, "{0:hh\\:mm}", new
+                                {
+                                    @class = "form-control",
+                                    type = "time",
+                                    required = "required"
+                                })
+                                @Html.ValidationMessageFor(m => m.hora, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="diagnostico" class="form-label">Diagnóstico</label>
+                            @Html.TextAreaFor(m => m.diagnostico, new
+                            {
+                                @class = "form-control",
+                                rows = "3",
+                                placeholder = "Escriba el diagnóstico o motivo de la consulta (opcional)"
+                            })
+                            @Html.ValidationMessageFor(m => m.diagnostico, "", new { @class = "text-danger" })
+                        </div>
+
+                        @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+
+                        <div class="form-actions mt-4">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Crear Cita
+                            </button>
+                            @Html.ActionLink("Cancelar", "Index", null, new { @class = "btn btn-secondary ml-2" })
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Cuando se selecciona un hospital
+            $('#hospitalSelect').change(function() {
+                var hospitalId = $(this).val();
+                var doctorSelect = $('#doctorSelect');
+                var pacienteSelect = $('#pacienteSelect');
+
+                if (hospitalId) {
+                    // Habilitar los dropdowns dependientes
+                    doctorSelect.prop('disabled', false);
+                    pacienteSelect.prop('disabled', false);
+
+                    // Cargar doctores
+                    $.get('@Url.Action("GetDoctoresPorHospital", "Citas")', { hospitalId: hospitalId })
+                        .done(function(data) {
+                            doctorSelect.html('<option value="">-- Seleccione Doctor --</option>');
+                            $(data).each(function(index, item) {
+                                doctorSelect.append('<option value="' + item.id_doctor + '">' + item.nombre_completo + '</option>');
+                            });
+                        })
+                        .fail(function() {
+                            doctorSelect.html('<option value="">Error al cargar doctores</option>');
+                        });
+
+                    // Cargar pacientes
+                    $.get('@Url.Action("GetPacientesPorHospital", "Citas")', { hospitalId: hospitalId })
+                        .done(function(data) {
+                            pacienteSelect.html('<option value="">-- Seleccione Paciente --</option>');
+                            $(data).each(function(index, item) {
+                                pacienteSelect.append('<option value="' + item.id_paciente + '">' + item.nombre_completo + '</option>');
+                            });
+                        })
+                        .fail(function() {
+                            pacienteSelect.html('<option value="">Error al cargar pacientes</option>');
+                        });
+                } else {
+                    // Deshabilitar y limpiar los dropdowns dependientes
+                    doctorSelect.prop('disabled', true).html('<option value="">-- Seleccione Doctor --</option>');
+                    pacienteSelect.prop('disabled', true).html('<option value="">-- Seleccione Paciente --</option>');
+                }
+            });
+
+            // Validación del formulario
+            $('.needs-validation').on('submit', function(event) {
+                if (this.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                $(this).addClass('was-validated');
+            });
+
+            // Auto-hide alerts
+            setTimeout(function() {
+                $('.alert').fadeOut();
+            }, 5000);
+        });
+    </script>
+}

@@ -1,0 +1,98 @@
+﻿@model IEnumerable<BDII_PF_JorgeIsaacLópezV.Models.Citas>
+
+@{
+    ViewBag.Title = "Citas del Paciente";
+    var paciente = ViewBag.Paciente as BDII_PF_JorgeIsaacLópezV.Models.Pacientes;
+}
+
+<h2>Citas del Paciente</h2>
+
+@if (paciente != null)
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Información del Paciente</h3>
+        </div>
+        <div class="panel-body">
+            <strong>@paciente.nombre @paciente.apellidos</strong> -
+            <em>Identificación: @paciente.identificacion</em>
+        </div>
+    </div>
+}
+
+@if (Model != null && Model.Any())
+{
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Hora</th>
+                    <th>Doctor</th>
+                    <th>Hospital</th>
+                    <th>Motivo</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var cita in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => cita.fecha)</td>
+                        <td>@Html.DisplayFor(modelItem => cita.hora)</td>
+                        <td>
+                            @if (cita.Doctores != null)
+                            {
+                                @($"{cita.Doctores.nombre} {cita.Doctores.apellidos}")
+                            }
+                            else
+                            {
+                                <em>No asignado</em>
+                            }
+                        </td>
+                        <td>
+                            @if (cita.Hospitales != null)
+                            {
+                                @cita.Hospitales.nombre
+                            }
+                            else
+                            {
+                                <em>No especificado</em>
+                            }
+                        </td>
+                        <td>@Html.DisplayFor(modelItem => cita.diagnostico)</td>
+                        <td>
+                            @if (cita.estado == "programada")
+                            {
+                                <span class="label label-success">Activa</span>
+                            }
+                            else
+                            {
+                                <span class="label label-default">Inactiva</span>
+                            }
+                        </td>
+                        <td>
+                            @Html.ActionLink("Ver", "DetallesCitas", "Citas", new { id = cita.id_cita }, new { @class = "btn btn-info btn-sm", title = "Ver detalles" })
+                            <a href="/Citas/DetallesCitas/" class="btn btn-xs btn-info">Ver Detalles</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="alert alert-info">
+        <strong>Sin citas registradas.</strong> Este paciente no tiene citas programadas.
+    </div>
+}
+
+<p>
+    @if (paciente != null)
+    {
+        @Html.ActionLink("Volver a Detalles", "DetallesPacientes", new { id = paciente.id_paciente }, new { @class = "btn btn-default" })
+    }
+    @Html.ActionLink("Volver a Lista de Pacientes", "Index", null, new { @class = "btn btn-primary" })
+</p>
