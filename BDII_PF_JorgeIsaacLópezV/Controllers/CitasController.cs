@@ -40,8 +40,24 @@ namespace BDII_PF_JorgeIsaacLópezV.Controllers
                     Id_Hospital = c.id_hospital,
                     Estado = c.estado,
                     Fecha_Creacion = c.fecha_creacion ?? DateTime.Now,
-                    Paciente = null,
-                    Hospital = null
+                    Paciente = c.Pacientes != null ? new Paciente
+                    {
+                        Id_Paciente = c.Pacientes.id_paciente,
+                        Nombre = c.Pacientes.nombre,
+                        Apellidos = c.Pacientes.apellidos
+                    } : null,
+                    Doctor = c.Doctores != null ? new Doctor
+                    {
+                        Id_Doctor = c.Doctores.id_doctor,
+                        Nombre = c.Doctores.nombre,
+                        Apellidos = c.Doctores.apellidos,
+                        Especialidad = c.Doctores.especialidad
+                    } : null,
+                    Hospital = c.Hospitales != null ? new Hospital
+                    {
+                        Id_Hospital = c.Hospitales.id_hospital,
+                        Nombre = c.Hospitales.nombre
+                    } : null
                 }).ToList();
 
                 if (listaCitas.Citas.Count == 0)

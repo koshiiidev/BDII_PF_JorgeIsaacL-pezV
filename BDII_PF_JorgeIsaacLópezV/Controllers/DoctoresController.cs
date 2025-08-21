@@ -82,7 +82,6 @@ namespace BDII_PF_JorgeIsaacLópezV.Controllers
                 email = doctor.email,
                 telefono = doctor.telefono,
                 id_hospital = doctor.id_hospital,
-                fecha_registro = doctor.fecha_registro,
                 activo = doctor.activo
             };
 
@@ -93,21 +92,21 @@ namespace BDII_PF_JorgeIsaacLópezV.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult EditarDoctores(Doctor model)
+        public ActionResult EditarDoctores(Doctores model)
         {
             if (ModelState.IsValid)
             {
-                var doctor = db.Doctores.Find(model.Id_Doctor);
+                var doctor = db.Doctores.Find(model.id_doctor);
                 if (doctor == null) return HttpNotFound();
 
-                doctor.identificacion = model.Identificacion;
-                doctor.nombre = model.Nombre;
-                doctor.apellidos = model.Apellidos;
-                doctor.especialidad = model.Especialidad;
-                doctor.email = model.Email;
-                doctor.telefono = model.Telefono;
-                doctor.id_hospital = model.Id_Hospital;
-                doctor.activo = model.Activo;
+                doctor.identificacion = model.identificacion;
+                doctor.nombre = model.nombre;
+                doctor.apellidos = model.apellidos;
+                doctor.especialidad = model.especialidad;
+                doctor.email = model.email;
+                doctor.telefono = model.telefono;
+                doctor.id_hospital = model.id_hospital;
+                doctor.activo = model.activo;
 
                 db.SaveChanges();
                 return RedirectToAction("Index");

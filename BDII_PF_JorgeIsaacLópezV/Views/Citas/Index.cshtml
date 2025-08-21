@@ -42,6 +42,9 @@
                             <table class="table table-striped table-hover">
                                 <thead class="thead-dark">
                                     <tr>
+                                        <th>Paciente</th>
+                                        <th>Doctor</th>
+                                        <th>Hospital</th>
                                         <th>Fecha</th>
                                         <th>Hora</th>
                                         <th>Estado</th>
@@ -54,6 +57,30 @@
                                     @foreach (var cita in Model.Citas)
                                     {
                                         <tr>
+                                            @if (cita.Paciente != null)
+                                            {
+                                                <td>@cita.Paciente.Nombre @cita.Paciente.Apellidos</td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-danger">Paciente no disponible</td>
+                                            }
+                                            @if (cita.Doctor != null)
+                                            {
+                                                <td>@cita.Doctor.Nombre @cita.Doctor.Apellidos</td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-danger">Doctor no disponible</td>
+                                            }
+                                            @if (cita.Hospital != null)
+                                            {
+                                                <td>@cita.Hospital.Nombre</td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-danger">Hospital no disponible</td>
+                                            }
                                             <td>@cita.Fecha.ToString("dd/MM/yyyy")</td>
                                             <td>@cita.Hora.ToString(@"hh\:mm")</td>
                                             <td>
