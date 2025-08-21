@@ -100,21 +100,22 @@
                                             <td>@(string.IsNullOrEmpty(cita.Diagnostico) ? "Sin diagnóstico" : cita.Diagnostico)</td>
                                             <td>@cita.Fecha_Creacion.ToString("dd/MM/yyyy HH:mm")</td>
                                             <td>
-                                                <div class="btn-group" role="group">
-                                                    @Html.ActionLink("Ver", "DetallesCitas", new { id = cita.Id_Cita }, new { @class = "btn btn-info btn-sm", title = "Ver detalles" })
+                                                <div class="d-flex flex-wrap gap-1">
+                                                    @Html.ActionLink("Ver", "DetallesCitas", new { id = cita.Id_Cita }, new { @class = "btn btn-info btn-sm mb-1", title = "Ver detalles" })
 
                                                     @if (cita.Estado == "programada")
                                                     {
-                                                        @Html.ActionLink("Editar", "EditarCita", new { id = cita.Id_Cita }, new { @class = "btn btn-warning btn-sm", title = "Editar cita" })
+                                                        @Html.ActionLink("Editar", "EditarCita", new { id = cita.Id_Cita }, new { @class = "btn btn-warning btn-sm mb-1 ml-1", title = "Editar cita" })
+
                                                         @Html.ActionLink("Completar", "Completar", new { id = cita.Id_Cita }, new
                                                         {
-                                                            @class = "btn btn-success btn-sm",
+                                                            @class = "btn btn-success btn-sm mb-1 ml-1",
                                                             title = "Completar cita",
                                                             onclick = "return confirm('¿Está seguro que desea marcar esta cita como completada?')"
                                                         })
                                                         @Html.ActionLink("Cancelar", "Cancelar", new { id = cita.Id_Cita }, new
                                                         {
-                                                            @class = "btn btn-danger btn-sm",
+                                                            @class = "btn btn-danger btn-sm mb-1 ml-1",
                                                             title = "Cancelar cita",
                                                             onclick = "return confirm('¿Está seguro que desea cancelar esta cita?')"
                                                         })
@@ -144,8 +145,9 @@
 
 @section Scripts {
     <script>
-        setTimeout(function() {
+        setTimeout(function () {
             $('.alert').fadeOut();
         }, 5000);
     </script>
 }
+

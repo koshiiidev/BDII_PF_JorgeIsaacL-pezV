@@ -111,7 +111,6 @@ namespace BDII_PF_JorgeIsaacLópezV.Controllers
                     Direccion = paciente.direccion,
                     Telefono = paciente.telefono,
                     Id_Hospital = paciente.id_hospital,
-                    Fecha_Registro = paciente.fecha_registro ?? DateTime.Now,
                     Activo = paciente.activo ?? true
                 };
 
