@@ -123,7 +123,6 @@ namespace BDII_PF_JorgeIsaacLópezV.Controllers
                         hospital.nombre = modelo.Nombre;
                         hospital.direccion = modelo.Direccion;
                         hospital.telefono = modelo.Telefono;
-                        hospital.fecha_creacion = modelo.Fecha_Creacion;
                         hospital.activo = modelo.Activo;
 
                         db.Entry(hospital).State = System.Data.Entity.EntityState.Modified;

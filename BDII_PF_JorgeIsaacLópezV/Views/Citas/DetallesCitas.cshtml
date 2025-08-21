@@ -1,7 +1,11 @@
 ﻿@model BDII_PF_JorgeIsaacLópezV.Models.Citas
+@using BDII_PF_JorgeIsaacLópezV.Models.viewModels
 
 @{
     ViewBag.Title = "Detalles de la Cita";
+    var tratamientosDetalle = ViewBag.TratamientosDetalle as List<TratamientoDetalle> ?? new List<TratamientoDetalle>();
+
+    var pagosController = new BDII_PF_JorgeIsaacLópezV.Controllers.PagosController();
 }
 
 <div class="container-fluid">
@@ -42,7 +46,6 @@
 
                 <div class="card-body">
                     <div class="row">
-                        <!-- Información básica de la cita -->
                         <div class="col-md-6">
                             <div class="card mb-4">
                                 <div class="card-header bg-primary text-white">
@@ -81,14 +84,12 @@
 
                                         <dt class="col-sm-4">Creada:</dt>
                                         <dd class="col-sm-8">
-                                            <i class="fas fa-plus-circle"></i> @Model.fecha_creacion?.ToString("dd/MM/yyyy HH:mm")
+                                            <i class="fas fa-plus-circle"></i> @Model.fecha_creacion
                                         </dd>
                                     </dl>
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Información del hospital -->
                         <div class="col-md-6">
                             <div class="card mb-4">
                                 <div class="card-header bg-info text-white">
@@ -127,7 +128,6 @@
                     </div>
 
                     <div class="row">
-                        <!-- Información del doctor -->
                         <div class="col-md-6">
                             <div class="card mb-4">
                                 <div class="card-header bg-success text-white">
@@ -178,7 +178,6 @@
                             </div>
                         </div>
 
-                        <!-- Información del paciente -->
                         <div class="col-md-6">
                             <div class="card mb-4">
                                 <div class="card-header bg-warning text-white">
@@ -230,7 +229,6 @@
                         </div>
                     </div>
 
-                    <!-- Diagnóstico -->
                     <div class="row">
                         <div class="col-md-12">
                             <div class="card mb-4">
@@ -253,8 +251,137 @@
                         </div>
                     </div>
 
-                    <!-- Tratamientos asociados -->
-                    @if (Model.Tratamientos != null && Model.Tratamientos.Any())
+                    @if (tratamientosDetalle.Any())
+                    {
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card mb-4">
+                                    <div class="card-header bg-primary text-white">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <h5 class="mb-0"><i class="fas fa-pills"></i> Tratamientos Asociados (@tratamientosDetalle.Count)</h5>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        @foreach (var tratamiento in tratamientosDetalle)
+                                        {
+                                            var tratamientoPagado = false;
+                                            using (var db = new BDII_PF_JorgeIsaacLópezV.Models.GestionHospitalesEntities())
+                                            {
+                                                tratamientoPagado = db.Pagos.Any(p => p.id_tratamiento == tratamiento.IdTratamiento && p.estado == "pagado");
+                                            }
+
+                                            <div class="card mb-3 border-left-primary">
+                                                <div class="card-header bg-light">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <div>
+                                                            <h6 class="mb-0">
+                                                                <strong>Tratamiento #@tratamiento.IdTratamiento</strong>
+                                                                @if (tratamientoPagado)
+                                                                {
+                                                                    <span class="badge badge-success ml-2">
+                                                                        <i class="fas fa-check-circle"></i> PAGADO
+                                                                    </span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <span class="badge badge-warning ml-2">
+                                                                        <i class="fas fa-clock"></i> PENDIENTE
+                                                                    </span>
+                                                                }
+                                                            </h6>
+                                                            <small class="text-muted">Fecha: @tratamiento.Fecha</small>
+                                                        </div>
+                                                        <div class="text-right">
+                                                            <span class="badge badge-info">Total: ₡@tratamiento.Total.ToString("N2")</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="card-body">
+                                                    @if (!string.IsNullOrEmpty(tratamiento.Descripcion))
+                                                    {
+                                                        <p class="mb-3"><strong>Descripción:</strong> @tratamiento.Descripcion</p>
+                                                    }
+
+                                                    @if (tratamiento.Medicamentos.Any())
+                                                    {
+                                                        <h6><i class="fas fa-pills"></i> Medicamentos Recetados:</h6>
+                                                        <div class="table-responsive">
+                                                            <table class="table table-sm table-striped">
+                                                                <thead class="thead-light">
+                                                                    <tr>
+                                                                        <th>Medicamento</th>
+                                                                        <th class="text-center">Cantidad</th>
+                                                                        <th class="text-right">Precio Unitario</th>
+                                                                        <th class="text-right">Subtotal</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    @foreach (var medicamento in tratamiento.Medicamentos)
+                                                                    {
+                                                                        <tr>
+                                                                            <td><i class="fas fa-capsules text-primary"></i> @medicamento.Nombre</td>
+                                                                            <td class="text-center">@medicamento.Cantidad</td>
+                                                                            <td class="text-right">₡@medicamento.CostoUnidad.ToString("N2")</td>
+                                                                            <td class="text-right"><strong>₡@medicamento.Subtotal.ToString("N2")</strong></td>
+                                                                        </tr>
+                                                                    }
+                                                                </tbody>
+                                                                <tfoot class="thead-light">
+                                                                    <tr>
+                                                                        <td colspan="3" class="text-right"><strong>Total del Tratamiento:</strong></td>
+                                                                        <td class="text-right"><strong>₡@tratamiento.Total.ToString("N2")</strong></td>
+                                                                    </tr>
+                                                                </tfoot>
+                                                            </table>
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <p class="text-muted"><i class="fas fa-info-circle"></i> No se han registrado medicamentos para este tratamiento.</p>
+                                                    }
+
+                                                    <div class="mt-3">
+                                                        @{
+                                                            bool estaPagado;
+                                                            using (var db = new BDII_PF_JorgeIsaacLópezV.Models.GestionHospitalesEntities())
+                                                            {
+                                                                estaPagado = db.Pagos.Any(p => p.id_tratamiento == tratamiento.IdTratamiento && p.estado == "pagado");
+                                                            }
+                                                        }
+
+                                                        @if (estaPagado)
+                                                        {
+                                                            <button class="btn btn-success btn-sm" disabled>
+                                                                <i class="fas fa-check-circle"></i> Pagado
+                                                            </button>
+                                                            <button class="btn btn-secondary btn-sm ml-2" disabled title="No se puede eliminar un tratamiento pagado">
+                                                                <i class="fas fa-lock"></i> Cancelar
+                                                            </button>
+                                                        }
+                                                        else
+                                                        {
+                                                            @Html.ActionLink("Procesar Pago", "Crear", "Pagos", new { idTratamiento = tratamiento.IdTratamiento }, new
+                                                            {
+                                                                @class = "btn btn-success btn-sm",
+                                                                title = "Procesar pago del tratamiento"
+                                                            })
+                                                            @Html.ActionLink("Cancelar", "Eliminar", "Tratamientos", new { id = tratamiento.IdTratamiento }, new
+                                                            {
+                                                                @class = "btn btn-danger btn-sm ml-2",
+                                                                title = "Eliminar tratamiento",
+                                                                onclick = "return confirm('¿Está seguro que desea eliminar este tratamiento? Esta acción no se puede deshacer.');"
+                                                            })
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
                     {
                         <div class="row">
                             <div class="col-md-12">
@@ -263,26 +390,15 @@
                                         <h5 class="mb-0"><i class="fas fa-pills"></i> Tratamientos Asociados</h5>
                                     </div>
                                     <div class="card-body">
-                                        <div class="table-responsive">
-                                            <table class="table table-sm table-striped">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Medicamento</th>
-                                                        <th>Dosis</th>
-                                                        <th>Duración</th>
-                                                        <th>Estado</th>
-                                                    </tr>
-                                                </thead>
-                                                
-                                            </table>
-                                        </div>
+                                        <p class="text-muted mb-0">
+                                            <i class="fas fa-info-circle"></i> No se han registrado tratamientos para esta cita.
+                                        </p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     }
 
-                    <!-- Acciones -->
                     <div class="form-actions mt-4">
                         <div class="btn-toolbar" role="toolbar">
                             <div class="btn-group mr-2" role="group">
@@ -322,13 +438,13 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            // Auto-hide alerts
+
             setTimeout(function () {
                 $('.alert').fadeOut();
             }, 5000);
 
-            // Tooltip para badges
             $('[data-toggle="tooltip"]').tooltip();
+            $('[title]').tooltip();
         });
     </script>
 }

@@ -1,0 +1,75 @@
+﻿@model BDII_PF_JorgeIsaacLópezV.Models.viewModels.PagoDetalle
+
+@{
+    ViewBag.Title = "Detalles del Pago";
+}
+
+<h2>Detalles del Pago</h2>
+
+<div>
+    <h4>Información del Pago</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            ID Pago:
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IdPago)
+        </dd>
+
+        <dt>
+            ID Tratamiento:
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IdTratamiento)
+        </dd>
+
+        <dt>
+            Paciente:
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Paciente)
+        </dd>
+
+        <dt>
+            Fecha:
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Fecha)
+        </dd>
+
+        <dt>
+            Monto:
+        </dt>
+        <dd>
+            ₡@Html.DisplayFor(model => model.Monto)
+        </dd>
+
+        <dt>
+            Método de Pago:
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.MetodoPago)
+        </dd>
+
+        <dt>
+            Estado:
+        </dt>
+        <dd>
+            <span class="label @(Model.Estado == "pagado" ? "label-success" : Model.Estado == "pendiente" ? "label-warning" : "label-danger")">
+                @Html.DisplayFor(model => model.Estado)
+            </span>
+        </dd>
+
+        <dt>
+            Descripción:
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Descripcion)
+        </dd>
+    </dl>
+</div>
+
+<p>
+    @Html.ActionLink("Volver a la Lista", "Pagos", "Pacientes", new { id = Model.IdPaciente }, new { @class = "btn btn-success" })
+</p>

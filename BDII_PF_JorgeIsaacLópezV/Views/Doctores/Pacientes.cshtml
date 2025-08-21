@@ -1,0 +1,84 @@
+﻿@model IEnumerable<BDII_PF_JorgeIsaacLópezV.Models.Pacientes>
+
+@{
+    ViewBag.Title = "Pacientes";
+    var doctor = ViewBag.Doctor as BDII_PF_JorgeIsaacLópezV.Models.Doctores;
+}
+
+<h2>Pacientes</h2>
+<h4>Doctor: @doctor.nombre @doctor.apellidos</h4>
+<hr />
+
+@if (TempData["Mensaje"] != null)
+{
+    string tipoMensaje = TempData["TipoMensaje"] as string ?? "info";
+    string claseAlerta = tipoMensaje == "error" ? "alert-danger" : "alert-success";
+
+    <div class="alert @claseAlerta alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        @TempData["Mensaje"]
+    </div>
+}
+
+@if (Model.Any())
+{
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.identificacion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.apellidos)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.telefono)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.fecha_registro)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.identificacion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.apellidos)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.telefono)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.fecha_registro)
+                </td>
+                <td>
+                    @Html.ActionLink("Crear Cita", "CrearCita", new { idDoctor = doctor.id_doctor, idPaciente = item.id_paciente }, new { @class = "btn btn-sm btn-success" })
+                </td>
+                <td>
+                    @Html.ActionLink("Ver Citas", "Citas", "Pacientes", new { id = item.id_paciente }, new { @class = "btn btn-sm btn-outline-success" })
+                </td>
+            </tr>
+        }
+
+    </table>
+}
+else
+{
+    <div class="alert alert-info">
+        <h4>No hay pacientes disponibles</h4>
+        <p>No se encontraron pacientes activos en este hospital.</p>
+    </div>
+}
+
+<p>
+    @Html.ActionLink("Volver a Doctores", "Index", null, new { @class = "btn btn-default" })
+</p>

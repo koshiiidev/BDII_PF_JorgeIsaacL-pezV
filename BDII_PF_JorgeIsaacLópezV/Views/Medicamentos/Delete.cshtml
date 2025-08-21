@@ -1,0 +1,93 @@
+﻿@model BDII_PF_JorgeIsaacLópezV.Models.Medicamentos
+
+@{
+    ViewBag.Title = "Desactivar Medicamento";
+}
+
+<h2>Desactivar Medicamento</h2>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
+
+<div class="alert alert-warning">
+    <strong>¡Atención!</strong> Está a punto de desactivar este medicamento. Esta acción no se puede deshacer fácilmente.
+</div>
+
+<h3>¿Está seguro de que desea desactivar este medicamento?</h3>
+<div>
+    <h4>Medicamento</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.nombre)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.nombre)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.descripcion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.descripcion)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.stock)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.stock)
+            @if (Model.stock > 0)
+            {
+                <br />
+                <small class="text-warning">
+                    <span class="glyphicon glyphicon-warning-sign"></span>
+                    Este medicamento aún tiene stock disponible.
+                </small>
+            }
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.costo_unidad)
+        </dt>
+
+        <dd>
+            ₡@Html.DisplayFor(model => model.costo_unidad)
+        </dd>
+
+        <dt>
+            Hospital
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Hospitales.nombre)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.fecha_registro)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.fecha_registro)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Desactivar" class="btn btn-danger"
+                   onclick="return confirm('¿Está completamente seguro de que desea desactivar este medicamento?')" /> |
+            @Html.ActionLink("Cancelar", "Index", null, new { @class = "btn btn-default" })
+        </div>
+    }
+</div>

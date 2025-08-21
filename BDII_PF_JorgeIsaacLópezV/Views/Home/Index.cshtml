@@ -2,32 +2,230 @@
     ViewBag.Title = "Home Page";
 }
 
-<main>
-    <section class="row" aria-labelledby="aspnetTitle">
-        <h1 id="title">ASP.NET</h1>
-        <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-        <p><a href="https://asp.net" class="btn btn-primary btn-md">Learn more &raquo;</a></p>
-    </section>
+<style>
+    body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
 
-    <div class="row">
-        <section class="col-md-4" aria-labelledby="gettingStartedTitle">
-            <h2 id="gettingStartedTitle">Getting started</h2>
-            <p>
-                ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-                enables a clean separation of concerns and gives you full control over markup
-                for enjoyable, agile development.
-            </p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-        </section>
-        <section class="col-md-4" aria-labelledby="librariesTitle">
-            <h2 id="librariesTitle">Get more libraries</h2>
-            <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-        </section>
-        <section class="col-md-4" aria-labelledby="hostingTitle">
-            <h2 id="hostingTitle">Web Hosting</h2>
-            <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-        </section>
+    .main-container {
+        padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .title-section {
+        text-align: center;
+        margin-bottom: 40px;
+        padding: 30px 20px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .main-title {
+        font-size: 2.5rem;
+        color: #ffffff;
+        margin-bottom: 10px;
+        font-weight: 300;
+        letter-spacing: -1px;
+    }
+
+    .subtitle {
+        font-size: 1.2rem;
+        color: rgba(255, 255, 255, 0.8);
+        font-weight: 400;
+    }
+
+    .cards-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 25px;
+        margin-top: 30px;
+    }
+
+    .management-card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .management-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .management-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-title {
+        font-size: 1.4rem;
+        color: #333;
+        margin-bottom: 10px;
+        font-weight: 600;
+    }
+
+    .card-description {
+        font-size: 0.95rem;
+        color: #666;
+        margin-bottom: 20px;
+        line-height: 1.5;
+    }
+
+    .card-action {
+        margin-top: auto;
+    }
+
+    .btn-custom {
+        background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        color: white;
+        padding: 12px 24px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        display: inline-block;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-custom:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        color: white;
+        text-decoration: none;
+    }
+
+    .btn-custom:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
+    }
+
+    .card-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 15px;
+        font-size: 1.5rem;
+    }
+
+    .icon-hospital {
+        background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+        color: white;
+    }
+
+    .icon-doctor {
+        background: linear-gradient(45deg, #4834d4, #686de0);
+        color: white;
+    }
+
+    .icon-patient {
+        background: linear-gradient(45deg, #00d2d3, #01a3a4);
+        color: white;
+    }
+
+    .icon-appointment {
+        background: linear-gradient(45deg, #feca57, #ff9ff3);
+        color: white;
+    }
+
+    .icon-medicine {
+        background: linear-gradient(45deg, #48dbfb, #0abde3);
+        color: white;
+    }
+
+    @@media (max-width: 768px) {
+        .main-title {
+            font-size: 2rem;
+        }
+
+        .cards-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .main-container {
+            padding: 15px;
+        }
+    }
+</style>
+
+<div class="main-container">
+    <div class="title-section">
+        <h1 class="main-title">Gestor de Hospitales</h1>
+        <p class="subtitle">¿Qué quieres hacer hoy?</p>
     </div>
-</main>
+
+    <div class="cards-grid">
+        <div class="management-card">
+            <div class="card-icon icon-hospital">🏥</div>
+            <h2 class="card-title">Gestionar Hospitales</h2>
+            <p class="card-description">
+                Registra, edita y consulta los detalles de los hospitales del sistema
+            </p>
+            <div class="card-action">
+                @Html.ActionLink("Gestionar Hospitales", "Index", "Hospitales", null, new { @class = "btn-custom" })
+            </div>
+        </div>
+
+        <div class="management-card">
+            <div class="card-icon icon-doctor">👨‍⚕️</div>
+            <h2 class="card-title">Gestionar Doctores</h2>
+            <p class="card-description">
+                Administra la información del personal médico y sus especialidades
+            </p>
+            <div class="card-action">
+                @Html.ActionLink("Gestionar Doctores", "Index", "Doctores", null, new { @class = "btn-custom" })
+            </div>
+        </div>
+
+        <div class="management-card">
+            <div class="card-icon icon-patient">👤</div>
+            <h2 class="card-title">Gestionar Pacientes</h2>
+            <p class="card-description">
+                Registra y mantén actualizada la información de los pacientes
+            </p>
+            <div class="card-action">
+                @Html.ActionLink("Gestionar Pacientes", "Index", "Pacientes", null, new { @class = "btn-custom" })
+            </div>
+        </div>
+
+        <div class="management-card">
+            <div class="card-icon icon-appointment">📅</div>
+            <h2 class="card-title">Gestionar Citas</h2>
+            <p class="card-description">
+                Programa y administra las citas médicas de manera eficiente
+            </p>
+            <div class="card-action">
+                @Html.ActionLink("Gestionar Citas", "Index", "Citas", null, new { @class = "btn-custom" })
+            </div>
+        </div>
+
+        <div class="management-card">
+            <div class="card-icon icon-medicine">💊</div>
+            <h2 class="card-title">Gestionar Medicamentos</h2>
+            <p class="card-description">
+                Controla el inventario y información de los medicamentos disponibles
+            </p>
+            <div class="card-action">
+                @Html.ActionLink("Gestionar Medicamentos", "Index", "Medicamentos", null, new { @class = "btn-custom" })
+            </div>
+        </div>
+    </div>
+</div>

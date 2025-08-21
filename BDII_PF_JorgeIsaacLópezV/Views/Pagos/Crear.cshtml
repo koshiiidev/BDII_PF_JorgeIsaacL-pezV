@@ -1,0 +1,104 @@
+﻿@model BDII_PF_JorgeIsaacLópezV.Models.viewModels.PagoCreate
+
+@{
+    ViewBag.Title = "Procesar Pago";
+}
+
+<h2>Procesar Pago del Tratamiento</h2>
+
+<div class="alert alert-info">
+    <i class="fas fa-info-circle"></i>
+    <strong>Simulación de Pago:</strong> Este proceso simula un pago real. Al procesar, el pago se marcará automáticamente como completado.
+</div>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Información del Pago</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        @Html.HiddenFor(model => model.IdTratamiento)
+        @Html.HiddenFor(model => model.IdPaciente)
+        @Html.HiddenFor(model => model.IdCita)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.IdTratamiento, "ID Tratamiento", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="form-control-static"><strong>#@Html.DisplayFor(model => model.IdTratamiento)</strong></div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.HiddenFor(model => model.Monto)
+            <div class="input-group">
+                <span class="input-group-addon">₡</span>
+                <input type="text" value="@Model.Monto.ToString("N2")" class="form-control" readonly />
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.MetodoPago, "Método de Pago", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.MetodoPago, new List<SelectListItem>
+                {
+                    new SelectListItem { Text = "Efectivo", Value = "efectivo", Selected = true },
+                    new SelectListItem { Text = "Tarjeta de Crédito", Value = "tarjeta_credito" },
+                    new SelectListItem { Text = "Tarjeta de Débito", Value = "tarjeta_debito" },
+                    new SelectListItem { Text = "Transferencia", Value = "transferencia" },
+                    new SelectListItem { Text = "Cheque", Value = "cheque" }
+                }, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.MetodoPago, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Descripcion, "Descripción (Opcional)", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.Descripcion, new { @class = "form-control", @rows = "3", @placeholder = "Ingrese cualquier observación adicional sobre el pago..." })
+                @Html.ValidationMessageFor(model => model.Descripcion, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>Importante:</strong> Al procesar este pago, se reducirá automáticamente el stock de los medicamentos del tratamiento y el pago se marcará como completado.
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <button type="submit" class="btn btn-success btn-lg">
+                    <i class="fas fa-credit-card"></i> Procesar Pago
+                </button>
+                @Html.ActionLink("Cancelar", "DetallesCitas", "Citas", new { id = Model.IdCita }, new { @class = "btn btn-default" })
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function () {
+            $('form').on('submit', function (e) {
+                var monto = $('#Monto').val();
+                var metodo = $('#MetodoPago option:selected').text();
+
+                var confirmacion = confirm('¿Está seguro que desea procesar este pago?\n\n' +
+                    'Monto: ₡' + parseFloat(monto).toLocaleString('es-CR', { minimumFractionDigits: 2 }) + '\n' +
+                    'Método: ' + metodo + '\n\n' +
+                    'Esta acción no se puede deshacer.');
+
+                if (!confirmacion) {
+                    e.preventDefault();
+                }
+            });
+        });
+    </script>
+}

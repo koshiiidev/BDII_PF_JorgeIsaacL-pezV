@@ -1,0 +1,104 @@
+﻿@model BDII_PF_JorgeIsaacLópezV.Models.Medicamentos
+
+@{
+    ViewBag.Title = "Detalles del Medicamento";
+}
+
+<h2>Detalles del Medicamento</h2>
+
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Mensaje"]
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
+
+<div>
+    <h4>Medicamento</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.nombre)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.nombre)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.descripcion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.descripcion)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.stock)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.stock)
+            @if (Model.stock <= 10)
+            {
+                <span class="label label-warning">Stock Bajo</span>
+            }
+            else if (Model.stock == 0)
+            {
+                <span class="label label-danger">Sin Stock</span>
+            }
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.costo_unidad)
+        </dt>
+
+        <dd>
+            ₡@Html.DisplayFor(model => model.costo_unidad)
+        </dd>
+
+        <dt>
+            Hospital
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Hospitales.nombre)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.fecha_registro)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.fecha_registro)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.activo)
+        </dt>
+
+        <dd>
+            @if (Model.activo == true)
+            {
+                <span class="label label-success">Activo</span>
+            }
+            else
+            {
+                <span class="label label-default">Inactivo</span>
+            }
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Editar", "Editar", new { id = Model.id_medicamento }, new { @class = "btn btn-primary" }) 
+    @Html.ActionLink("Gestionar Stock", "GestionarStock", new { id = Model.id_medicamento }, new { @class = "btn btn-warning" }) 
+    @Html.ActionLink("Regresar a la Lista", "Index", null, new { @class = "btn btn-outline-success" })
+</p>

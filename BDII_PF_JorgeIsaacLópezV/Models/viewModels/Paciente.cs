@@ -22,8 +22,8 @@ namespace BDII_PF_JorgeIsaacLópezV.Models.viewModels
         [RegularExpression(@"^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$", ErrorMessage = "El nombre no debe contener números")]
         public string Apellidos { get; set; }
 
-        [Required(ErrorMessage = "La fecha de nacimiento es obligatoria")]
-        [Display(Name = "Fecha de Nacimiento")]
+        [Required(ErrorMessage = "La Identificacion es obligatoria")]
+        [Display(Name = "Identificacion")]
         public string Identificacion { get; set; }
 
         [Required(ErrorMessage = "La fecha de nacimiento es obligatoria")]
@@ -43,6 +43,9 @@ namespace BDII_PF_JorgeIsaacLópezV.Models.viewModels
         public string Telefono { get; set; }
         public int Id_Hospital { get; set; }
         public DateTime Fecha_Registro { get; set; }
+
+        [Required(ErrorMessage = "El estado es obligatorio")]
+        [Display(Name = "Activo")]
         public bool Activo { get; set; }
 
         

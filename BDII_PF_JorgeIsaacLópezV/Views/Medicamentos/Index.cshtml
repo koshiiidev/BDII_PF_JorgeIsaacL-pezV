@@ -1,0 +1,100 @@
+﻿@model IEnumerable<BDII_PF_JorgeIsaacLópezV.Models.Medicamentos>
+
+@{
+    ViewBag.Title = "Medicamentos";
+}
+
+<h2>Medicamentos</h2>
+
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Mensaje"]
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
+
+<p>
+    @Html.ActionLink("Crear Nuevo Medicamento", "Crear", null, new { @class = "btn btn-primary" })
+</p>
+
+@using (Html.BeginForm("Index", "Medicamentos", FormMethod.Get))
+{
+    <div class="form-group">
+        <label for="hospitalId">Filtrar por Hospital:</label>
+        @Html.DropDownList("hospitalId", (SelectList)ViewBag.Hospitales, "-- Todos los hospitales --", new { @class = "form-control", @style = "width: 300px; display: inline-block;" })
+        <input type="submit" value="Filtrar" class="btn btn-success" />
+        @Html.ActionLink("Limpiar", "Index", null, new { @class = "btn btn-danger" })
+    </div>
+}
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.nombre)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.descripcion)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.stock)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.costo_unidad)
+        </th>
+        <th>
+            Hospital
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.fecha_registro)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.descripcion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.stock)
+                @if (item.stock <= 10)
+                {
+                    <span class="label label-warning">Stock Bajo</span>
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.costo_unidad)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Hospitales.nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.fecha_registro)
+            </td>
+            <td>
+                @Html.ActionLink("Editar", "Editar", new { id = item.id_medicamento }, new { @class = "btn btn-sm btn-outline-success" }) 
+            </td>
+            <td>
+                @Html.ActionLink("Detalles", "Detalles", new { id = item.id_medicamento }, new { @class = "btn btn-sm btn-info" })
+            </td>
+            <td>
+                @Html.ActionLink("Gestionar Stock", "GestionarStock", new { id = item.id_medicamento }, new { @class = "btn btn-sm btn-warning" })
+            </td>
+            <td>
+                @Html.ActionLink("Eliminar", "Delete", new { id = item.id_medicamento }, new { @class = "btn btn-sm btn-danger" })
+            </td>
+        </tr>
+    }
+
+</table>

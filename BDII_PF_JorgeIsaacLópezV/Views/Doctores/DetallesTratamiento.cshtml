@@ -1,0 +1,106 @@
+﻿@model BDII_PF_JorgeIsaacLópezV.Models.viewModels.TratamientoDetalle
+
+@{
+    ViewBag.Title = "Detalles del Tratamiento";
+}
+
+<h2>Detalles del Tratamiento</h2>
+
+@if (TempData["Mensaje"] != null)
+{
+    string tipoMensaje = TempData["TipoMensaje"] as string ?? "info";
+    string claseAlerta = tipoMensaje == "error" ? "alert-danger" : "alert-success";
+
+    <div class="alert @claseAlerta alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        @TempData["Mensaje"]
+    </div>
+}
+
+<div>
+    <h4>Información del Tratamiento</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            ID Tratamiento:
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IdTratamiento)
+        </dd>
+
+        <dt>
+            Paciente:
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Paciente)
+        </dd>
+
+        <dt>
+            Doctor:
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Doctor)
+        </dd>
+
+        <dt>
+            Fecha:
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Fecha)
+        </dd>
+
+        <dt>
+            Descripción:
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Descripcion)
+        </dd>
+    </dl>
+</div>
+
+<div>
+    <h4>Medicamentos del Tratamiento</h4>
+    <hr />
+
+    @if (Model.Medicamentos != null && Model.Medicamentos.Any())
+    {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Medicamento</th>
+                    <th>Cantidad</th>
+                    <th>Costo Unitario</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var medicamento in Model.Medicamentos)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(m => medicamento.Nombre)</td>
+                        <td>@Html.DisplayFor(m => medicamento.Cantidad)</td>
+                        <td>@Html.DisplayFor(m => medicamento.CostoUnidad, "{0:C}")</td>
+                        <td>@Html.DisplayFor(m => medicamento.Subtotal, "{0:C}")</td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr class="info">
+                    <td colspan="3"><strong>Total del Tratamiento:</strong></td>
+                    <td><strong>@Html.DisplayFor(model => model.Total, "{0:C}")</strong></td>
+                </tr>
+            </tfoot>
+        </table>
+    }
+    else
+    {
+        <div class="alert alert-warning">
+            <h4>Sin medicamentos</h4>
+            <p>Este tratamiento no tiene medicamentos asociados.</p>
+        </div>
+    }
+</div>
+
+<p>
+    @Html.ActionLink("Volver a Doctores", "Index", null, new { @class = "btn btn-default" })
+</p>

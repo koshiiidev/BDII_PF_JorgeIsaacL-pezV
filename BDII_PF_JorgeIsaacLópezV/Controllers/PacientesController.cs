@@ -251,8 +251,7 @@ namespace BDII_PF_JorgeIsaacLópezV.Controllers
                 return RedirectToAction("Index");
             }
             var pagos = db.Pagos
-                .Include("Citas")
-                .Include("Tratamiento_Medicamento")
+                .Include("Tratamientos")
                 .Where(p => p.id_paciente == id)
                 .OrderByDescending(p => p.fecha)
                 .ToList();

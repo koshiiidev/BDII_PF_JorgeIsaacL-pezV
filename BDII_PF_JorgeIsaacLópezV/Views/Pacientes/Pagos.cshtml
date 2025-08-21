@@ -1,4 +1,4 @@
-﻿@model IEnumerable<BDII_PF_JorgeIsaacLópezV.Models.viewModels.Pago>
+﻿@model IEnumerable<BDII_PF_JorgeIsaacLópezV.Models.Pagos>
 
 @{
     ViewBag.Title = "Pagos del Paciente";
@@ -34,10 +34,10 @@
                             <strong>Total de Pagos:</strong> @Model.Count()
                         </div>
                         <div class="col-md-4">
-                            <strong>Monto Total:</strong> ₡@Model.Sum(p => p.monto ?? 0).ToString("N2")
+                            <strong>Monto Total:</strong> ₡@Model.Sum(p => p.monto).ToString("N2")
                         </div>
                         <div class="col-md-4">
-                            <strong>Último Pago:</strong> @Model.Max(p => p.fecha)?.ToString("dd/MM/yyyy")
+                            <strong>Último Pago:</strong> @Model.Max(p => p.fecha)
                         </div>
                     </div>
                 </div>
@@ -53,7 +53,6 @@
                     <th>Monto</th>
                     <th>Método de Pago</th>
                     <th>Concepto</th>
-                    <th>Cita Relacionada</th>
                     <th>Estado</th>
                     <th>Acciones</th>
                 </tr>
@@ -65,21 +64,8 @@
                         <td>@Html.DisplayFor(modelItem => pago.fecha)</td>
                         <td class="text-right">₡@Html.DisplayFor(modelItem => pago.monto)</td>
                         <td>@Html.DisplayFor(modelItem => pago.metodo_pago)</td>
-                        <td>@Html.DisplayFor(modelItem => pago.concepto)</td>
-                        <td>
-                            @if (pago.Citas != null)
-                            {
-                                @($"Cita del {pago.Citas.fecha?.ToString("dd/MM/yyyy")} - {pago.Citas.motivo}")
-                            }
-                            else if (pago.Tratamiento_Medicamento != null)
-                            {
-                                <em>Tratamiento/Medicamento</em>
-                            }
-                            else
-                            {
-                                <em>No especificado</em>
-                            }
-                        </td>
+                        <td>@Html.DisplayFor(modelItem => pago.descripcion)</td>
+
                         <td>
                             @if (pago.estado == "Pagado" || pago.estado == "Completado")
                             {
@@ -95,7 +81,7 @@
                             }
                         </td>
                         <td>
-                            <a href="#" class="btn btn-xs btn-info">Ver Detalles</a>
+                            @Html.ActionLink("Ver Detalles", "Detalles" ,"Pagos", new { id = pago.id_pago}, new { @class = "btn btn-xs btn-info" })
                         </td>
                     </tr>
                 }
@@ -113,7 +99,7 @@ else
 <p>
     @if (paciente != null)
     {
-        @Html.ActionLink("Volver a Detalles", "DetallesPacientes", new { id = paciente.id_paciente }, new { @class = "btn btn-default" })
+        @Html.ActionLink("Volver a Detalles", "DetallesPacientes", new { id = paciente.id_paciente }, new { @class = "btn btn-success" })
     }
     @Html.ActionLink("Volver a Lista de Pacientes", "Index", null, new { @class = "btn btn-primary" })
 </p>

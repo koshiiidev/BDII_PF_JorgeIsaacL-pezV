@@ -1,0 +1,135 @@
+﻿@model BDII_PF_JorgeIsaacLópezV.Models.viewModels.TratamientoCreate
+
+@{
+    ViewBag.Title = "Crear Tratamiento";
+}
+
+<h2>Crear Tratamiento</h2>
+
+@if (TempData["Mensaje"] != null)
+{
+    string tipoMensaje = TempData["TipoMensaje"] as string ?? "info";
+    string claseAlerta = tipoMensaje == "error" ? "alert-danger" : "alert-success";
+
+    <div class="alert @claseAlerta alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        @TempData["Mensaje"]
+    </div>
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Tratamiento Médico</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        @Html.HiddenFor(model => model.IdCita)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Descripcion, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.Descripcion, new { htmlAttributes = new { @class = "form-control", rows = "4" } })
+                @Html.ValidationMessageFor(model => model.Descripcion, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-12">
+                <h4>Medicamentos Disponibles</h4>
+                <hr />
+
+                @if (Model.Medicamentos != null && Model.Medicamentos.Any())
+                {
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Seleccionar</th>
+                                <th>Medicamento</th>
+                                <th>Stock Disponible</th>
+                                <th>Costo por Unidad</th>
+                                <th>Cantidad</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < Model.Medicamentos.Count; i++)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.HiddenFor(m => m.Medicamentos[i].IdMedicamento)
+                                        @Html.HiddenFor(m => m.Medicamentos[i].Nombre)
+                                        @Html.HiddenFor(m => m.Medicamentos[i].Stock)
+                                        @Html.HiddenFor(m => m.Medicamentos[i].CostoUnidad)
+                                        @Html.CheckBoxFor(m => m.Medicamentos[i].Seleccionado)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(m => m.Medicamentos[i].Nombre)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(m => m.Medicamentos[i].Stock)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(m => m.Medicamentos[i].CostoUnidad, "{0:C}")
+                                    </td>
+                                    <td>
+                                        @Html.EditorFor(m => m.Medicamentos[i].Cantidad, new { htmlAttributes = new { @class = "form-control", @type = "number", @min = "1", @max = Model.Medicamentos[i].Stock } })
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <div class="alert alert-warning">
+                        <h4>No hay medicamentos disponibles</h4>
+                        <p>No se encontraron medicamentos activos en este hospital.</p>
+                    </div>
+                }
+            </div>
+        </div>
+
+        @if (Model.Medicamentos != null && Model.Medicamentos.Any())
+        {
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Crear Tratamiento" class="btn btn-primary" />
+                </div>
+            </div>
+        }
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Volver", "Index")
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('input[type="checkbox"]').change(function() {
+            var row = $(this).closest('tr');
+            var cantidadInput = row.find('input[type="number"]');
+
+            if ($(this).is(':checked')) {
+                cantidadInput.prop('disabled', false);
+                if (!cantidadInput.val() || cantidadInput.val() == '0') {
+                    cantidadInput.val('1');
+                }
+            } else {
+                cantidadInput.prop('disabled', true);
+                cantidadInput.val('');
+            }
+        });
+
+        $('input[type="checkbox"]').each(function() {
+            var row = $(this).closest('tr');
+            var cantidadInput = row.find('input[type="number"]');
+
+            if (!$(this).is(':checked')) {
+                cantidadInput.prop('disabled', true);
+            }
+        });
+    });
+</script>

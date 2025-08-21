@@ -1,9 +1,262 @@
 ﻿@{
     ViewBag.Title = "About";
 }
-<main aria-labelledby="title">
-    <h2 id="title">@ViewBag.Title.</h2>
-    <h3>@ViewBag.Message</h3>
 
-    <p>Use this area to provide additional information.</p>
-</main>
+<style>
+    .about-container {
+        background: #0a0a0a;
+        color: #ffffff;
+        min-height: 100vh;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        padding: 0;
+        margin: 0;
+    }
+
+    .about-content {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 60px 40px;
+    }
+
+    .project-header {
+        text-align: center;
+        margin-bottom: 50px;
+        padding-bottom: 30px;
+        border-bottom: 1px solid #333;
+    }
+
+    .project-title {
+        font-size: 14px;
+        color: #888;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin: 0;
+    }
+
+    .main-title {
+        font-size: 3rem;
+        font-weight: 300;
+        margin: 40px 0 20px 0;
+        background: linear-gradient(135deg, #ffffff, #cccccc);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .subtitle {
+        font-size: 1.2rem;
+        color: #aaa;
+        margin-bottom: 40px;
+    }
+
+    .bio-section {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        margin-bottom: 50px;
+    }
+
+    .bio-card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 30px;
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+    }
+
+    .bio-card:hover {
+        border-color: rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    .bio-card h3 {
+        font-size: 1.1rem;
+        margin-bottom: 20px;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .flag-emoji {
+        font-size: 1.2rem;
+    }
+
+    .bio-card p {
+        font-size: 0.95rem;
+        color: #ccc;
+        margin-bottom: 15px;
+    }
+
+    .focus-list {
+        list-style: none;
+        padding: 0;
+        margin: 15px 0 0 0;
+    }
+
+    .focus-list li {
+        color: #aaa;
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+        padding-left: 20px;
+        position: relative;
+    }
+
+    .focus-list li::before {
+        content: '→';
+        position: absolute;
+        left: 0;
+        color: #666;
+    }
+
+    .links-section {
+        text-align: center;
+        margin-top: 60px;
+    }
+
+    .links-title {
+        font-size: 1.5rem;
+        margin-bottom: 30px;
+        color: #fff;
+    }
+
+    .links-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-top: 30px;
+    }
+
+    .link-card {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 20px;
+        text-decoration: none;
+        color: #fff;
+        transition: all 0.3s ease;
+        display: block;
+    }
+
+    .link-card:hover {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.3);
+        transform: translateY(-2px);
+        color: #fff;
+        text-decoration: none;
+    }
+
+    .link-icon {
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+        display: block;
+    }
+
+    .link-title {
+        font-weight: 600;
+        margin-bottom: 5px;
+        font-size: 1rem;
+    }
+
+    .link-subtitle {
+        font-size: 0.85rem;
+        color: #aaa;
+    }
+
+    .footer-note {
+        text-align: center;
+        margin-top: 60px;
+        padding-top: 30px;
+        border-top: 1px solid #333;
+        color: #666;
+        font-size: 0.9rem;
+    }
+
+    @@media (max-width: 768px) {
+        .about-content {
+            padding: 40px 20px;
+        }
+
+        .main-title {
+            font-size: 2rem;
+        }
+
+        .bio-section {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .bio-card {
+            padding: 20px;
+        }
+
+        .links-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="about-container">
+    <main class="about-content" aria-labelledby="title">
+        <div class="project-header">
+            <p class="project-title">Proyecto para el curso de Bases de Datos II de la Universidad Americana</p>
+            <h1 id="title" class="main-title">Jorge Isaac López Valverde</h1>
+            <p class="subtitle">Conoce más sobre mi</p>
+        </div>
+
+        <div class="bio-section">
+            <div class="bio-card">
+                <h3><span class="flag-emoji">🇨🇷</span> Español</h3>
+                <p>Soy un programador autodidacta de 24 años de Costa Rica y actualmente estudio Ingeniería en Sistemas. Me apasiona aprender nuevas tecnologías, especialmente cuando se trata de temas que me interesan y me motivan.</p>
+                <p><strong>Mi enfoque está en:</strong></p>
+                <ul class="focus-list">
+                    <li>Desarrollo de software y programación</li>
+                    <li>Aprendizaje continuo de manera autodidacta</li>
+                    <li>Participar en proyectos colaborativos que me permitan expandir mis conocimientos</li>
+                </ul>
+                <p style="margin-top: 15px;">Además, me encantan los video-juegos, la creación de contenido y también hago música.</p>
+            </div>
+
+            <div class="bio-card">
+                <h3><span class="flag-emoji">🇺🇸</span> English</h3>
+                <p>I am a 24-year-old self-taught programmer from Costa Rica studying Systems Engineering. I am passionate about learning new technologies, especially when it comes to topics that interest and motivate me.</p>
+                <p><strong>My focus is on:</strong></p>
+                <ul class="focus-list">
+                    <li>Software development and programming</li>
+                    <li>Continuous self-taught learning</li>
+                    <li>Participating in collaborative projects that allow me to expand my knowledge</li>
+                </ul>
+                <p style="margin-top: 15px;">I'm also into video games and content creation, and I make music.</p>
+            </div>
+        </div>
+        <div class="links-section">
+            <h2 class="links-title">Conectemos</h2>
+            <div class="links-grid">
+                <a href="https://github.com/koshiiidev" target="_blank" class="link-card">
+                    <span class="link-icon">💻</span>
+                    <div class="link-title">GitHub</div>
+                    <div class="link-subtitle">Proyectos de código</div>
+                </a>
+
+                <a href="https://www.linkedin.com/in/isaaclv/" target="_blank" class="link-card">
+                    <span class="link-icon">💼</span>
+                    <div class="link-title">LinkedIn</div>
+                    <div class="link-subtitle">Perfil profesional</div>
+                </a>
+
+                <a href="https://linktr.ee/koshwav" target="_blank" class="link-card">
+                    <span class="link-icon">🎵</span>
+                    <div class="link-title">Linktree</div>
+                    <div class="link-subtitle">Proyecto musical</div>
+                </a>
+            </div>
+        </div>
+
+        <div class="footer-note">
+            <p>Desarrollado con pasión desde Costa Rica</p> 
+            <img src="https://flagcdn.com/w20/cr.png" width="20" alt="Costa Rica">
+        </div>
+    </main>
+</div>

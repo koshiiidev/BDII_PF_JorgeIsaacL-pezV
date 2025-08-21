@@ -122,18 +122,15 @@
 @section Scripts {
     <script>
         $(document).ready(function() {
-            // Cuando se selecciona un hospital
             $('#hospitalSelect').change(function() {
                 var hospitalId = $(this).val();
                 var doctorSelect = $('#doctorSelect');
                 var pacienteSelect = $('#pacienteSelect');
 
                 if (hospitalId) {
-                    // Habilitar los dropdowns dependientes
                     doctorSelect.prop('disabled', false);
                     pacienteSelect.prop('disabled', false);
 
-                    // Cargar doctores
                     $.get('@Url.Action("GetDoctoresPorHospital", "Citas")', { hospitalId: hospitalId })
                         .done(function(data) {
                             doctorSelect.html('<option value="">-- Seleccione Doctor --</option>');
@@ -145,7 +142,6 @@
                             doctorSelect.html('<option value="">Error al cargar doctores</option>');
                         });
 
-                    // Cargar pacientes
                     $.get('@Url.Action("GetPacientesPorHospital", "Citas")', { hospitalId: hospitalId })
                         .done(function(data) {
                             pacienteSelect.html('<option value="">-- Seleccione Paciente --</option>');
@@ -157,13 +153,11 @@
                             pacienteSelect.html('<option value="">Error al cargar pacientes</option>');
                         });
                 } else {
-                    // Deshabilitar y limpiar los dropdowns dependientes
                     doctorSelect.prop('disabled', true).html('<option value="">-- Seleccione Doctor --</option>');
                     pacienteSelect.prop('disabled', true).html('<option value="">-- Seleccione Paciente --</option>');
                 }
             });
 
-            // Validación del formulario
             $('.needs-validation').on('submit', function(event) {
                 if (this.checkValidity() === false) {
                     event.preventDefault();
@@ -172,7 +166,6 @@
                 $(this).addClass('was-validated');
             });
 
-            // Auto-hide alerts
             setTimeout(function() {
                 $('.alert').fadeOut();
             }, 5000);

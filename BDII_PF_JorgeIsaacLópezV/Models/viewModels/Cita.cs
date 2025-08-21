@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -7,13 +8,22 @@ namespace BDII_PF_JorgeIsaacLópezV.Models.viewModels
 {
     public class Cita
     {
+
         public int Id_Cita { get; set; }
+
+        [Required(ErrorMessage = "La fecha es obligatoria")]
+        [Display(Name = "Fecha")]
         public DateTime Fecha { get; set; }
+
+        [Required(ErrorMessage = "La hora es obligatoria")]
+        [Display(Name = "Hora")]
         public TimeSpan Hora { get; set; }
         public string Diagnostico { get; set; }
         public int Id_Doctor { get; set; }
         public int Id_Paciente { get; set; }
         public int Id_Hospital { get; set; }
+
+        [Required]
         public string Estado { get; set; }
         public DateTime Fecha_Creacion { get; set; }
 

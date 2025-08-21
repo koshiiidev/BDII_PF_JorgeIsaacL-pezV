@@ -8,6 +8,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
+
 namespace BDII_PF_JorgeIsaacLópezV.Controllers
 {
     public class CitasController : Controller
@@ -82,6 +83,8 @@ namespace BDII_PF_JorgeIsaacLópezV.Controllers
                     return RedirectToAction("Index");
                 }
 
+                ViewBag.TratamientosDetalle = ObtenerTratamientosPorCita(id.Value);
+
                 return View(cita);
             }
             catch (Exception ex)
@@ -97,7 +100,7 @@ namespace BDII_PF_JorgeIsaacLópezV.Controllers
             try
             {
                 CargarListasDropDown();
-                var cita = new Citas  // Cambiar de 'Cita' a 'Citas'
+                var cita = new Citas  
                 {
                     fecha = DateTime.Today,
                     estado = "programada",
@@ -115,13 +118,12 @@ namespace BDII_PF_JorgeIsaacLópezV.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CrearCita(Citas cita)  // Cambiar de 'Cita' a 'Citas'
+        public ActionResult CrearCita(Citas cita)  
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    // Validar que la fecha no sea anterior a hoy
                     if (cita.fecha < DateTime.Today)
                     {
                         ModelState.AddModelError("fecha", "La fecha de la cita no puede ser anterior a hoy");
@@ -129,7 +131,6 @@ namespace BDII_PF_JorgeIsaacLópezV.Controllers
                         return View(cita);
                     }
 
-                    // Validar disponibilidad del doctor
                     var citaExistente = db.Citas.FirstOrDefault(c =>
                         c.id_doctor == cita.id_doctor &&
                         c.fecha == cita.fecha &&
@@ -143,7 +144,6 @@ namespace BDII_PF_JorgeIsaacLópezV.Controllers
                         return View(cita);
                     }
 
-                    // Asignar valores por defecto
                     cita.estado = "programada";
                     cita.fecha_creacion = DateTime.Now;
 
@@ -406,6 +406,62 @@ namespace BDII_PF_JorgeIsaacLópezV.Controllers
                 new { value = "completada", text = "Completada" },
                 new { value = "cancelada", text = "Cancelada" }
             }, "value", "text");
+        }
+
+        private List<TratamientoDetalle> ObtenerTratamientosPorCita(int idCita)
+        {
+
+            try
+            {
+                var tratamientos = db.Tratamientos
+                    .Include("Citas")
+                    .Include("Citas.Pacientes")
+                    .Include("Citas.Doctores")
+                    .Include("Tratamiento_Medicamento")
+                    .Include("Tratamiento_Medicamento.Medicamentos")
+                    .Where(t => t.id_cita == idCita)
+                    .ToList();
+
+                var resultado = new List<TratamientoDetalle>();
+
+                foreach (var tratamiento in tratamientos)
+                {
+                    var detalle = new TratamientoDetalle
+                    {
+                        IdTratamiento = tratamiento.id_tratamiento,
+                        Paciente = tratamiento.Citas?.Pacientes != null
+                    ? $"{tratamiento.Citas.Pacientes.nombre} {tratamiento.Citas.Pacientes.apellidos}"
+                    : "Paciente no disponible",
+                        Doctor = tratamiento.Citas?.Doctores != null
+                    ? $"{tratamiento.Citas.Doctores.nombre} {tratamiento.Citas.Doctores.apellidos}"
+                    : "Doctor no disponible",
+                        Descripcion = tratamiento.descripcion ?? "Sin descripción",
+                        Fecha = tratamiento.fecha_tratamiento?.ToString("dd/MM/yyyy") ?? "No especificada",
+                        Medicamentos = new List<TratamientoMedicamentoItem>()
+                    };
+
+                    if (tratamiento.Tratamiento_Medicamento != null && tratamiento.Tratamiento_Medicamento.Any())
+                    {
+                        detalle.Medicamentos = tratamiento.Tratamiento_Medicamento.Select(tm => new TratamientoMedicamentoItem
+                        {
+                            Nombre = tm.Medicamentos?.nombre ?? "Medicamento no disponible",
+                            Cantidad = tm.cantidad,
+                            CostoUnidad = tm.Medicamentos?.costo_unidad ?? 0
+                        }).ToList();
+                    }
+
+                    detalle.Total = detalle.Medicamentos.Sum(m => m.Subtotal);
+                    resultado.Add(detalle);
+                }
+
+                return resultado;
+            }
+            catch (Exception ex)
+            {
+                TempData["Mensaje"] = "Error al cargar los tratamientos de la cita." + ex.Message;
+                TempData["TipoMensaje"] = "error";
+                return new List<TratamientoDetalle>();
+            }
         }
 
         protected override void Dispose(bool disposing)

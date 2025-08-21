@@ -19,17 +19,18 @@ namespace BDII_PF_JorgeIsaacLópezV.Models.viewModels
         [Required(ErrorMessage = "La direccion es obligatoria")]
         [Display(Name = "Direccion")]
         public string Direccion { get; set; }
+
+        [Required(ErrorMessage = "El número de telefono es obligatorio")]
+        [Display(Name = "Telefono")]
         public string Telefono { get; set; }
         public DateTime Fecha_Creacion { get; set; }
+
+        [Required(ErrorMessage = "El estado es obligatorio")]
+        [Display(Name = "Activo")]
         public bool Activo { get; set; }
 
         
         
-
-        //public virtual ICollection<Doctor> Doctores { get; set; }
-        //public virtual ICollection<Paciente> Pacientes { get; set; }
-        //public virtual ICollection<Medicamento> Medicamentos { get; set; }
-        //public virtual ICollection<Cita> Citas { get; set; }
     }
 
     public class ListaHospitales

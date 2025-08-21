@@ -1,0 +1,75 @@
+﻿@model BDII_PF_JorgeIsaacLópezV.Models.viewModels.TratamientoCreate
+
+@{
+    ViewBag.Title = "Crear Tratamiento";
+}
+
+<h2>Crear Tratamiento</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Nuevo Tratamiento</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.IdCita)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Descripcion, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.Descripcion, new { htmlAttributes = new { @class = "form-control", rows = 4 } })
+                @Html.ValidationMessageFor(model => model.Descripcion, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <h4>Seleccionar Medicamentos</h4>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Seleccionar</th>
+                            <th>Medicamento</th>
+                            <th>Stock Disponible</th>
+                            <th>Costo por Unidad</th>
+                            <th>Cantidad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.Medicamentos.Count; i++)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.CheckBoxFor(m => m.Medicamentos[i].Seleccionado)
+                                    @Html.HiddenFor(m => m.Medicamentos[i].IdMedicamento)
+                                    @Html.HiddenFor(m => m.Medicamentos[i].Nombre)
+                                    @Html.HiddenFor(m => m.Medicamentos[i].Stock)
+                                    @Html.HiddenFor(m => m.Medicamentos[i].CostoUnidad)
+                                </td>
+                                <td>@Html.DisplayFor(m => m.Medicamentos[i].Nombre)</td>
+                                <td>@Html.DisplayFor(m => m.Medicamentos[i].Stock)</td>
+                                <td>₡@Html.DisplayFor(m => m.Medicamentos[i].CostoUnidad)</td>
+                                <td>
+                                    @Html.EditorFor(m => m.Medicamentos[i].Cantidad, new { htmlAttributes = new { @class = "form-control", @type = "number", @min = "1", @max = Model.Medicamentos[i].Stock } })
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Crear Tratamiento" class="btn btn-primary" />
+                @Html.ActionLink("Cancelar", "Index", "Citas", null, new { @class = "btn btn-default" })
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

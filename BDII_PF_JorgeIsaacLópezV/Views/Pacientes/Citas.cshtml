@@ -73,8 +73,10 @@
                             }
                         </td>
                         <td>
-                            @Html.ActionLink("Ver", "DetallesCitas", "Citas", new { id = cita.id_cita }, new { @class = "btn btn-info btn-sm", title = "Ver detalles" })
-                            <a href="/Citas/DetallesCitas/" class="btn btn-xs btn-info">Ver Detalles</a>
+                            @Html.ActionLink("Ver Detalles", "DetallesCitas", "Citas", new { id = cita.id_cita }, new { @class = "btn btn-info btn-sm", title = "Ver detalles" })
+                        </td>
+                        <td>
+                            @Html.ActionLink("Editar", "EditarCita", "Citas", new { id = cita.id_cita }, new { @class = "btn btn-info btn-sm", title = "Ver detalles" })
                         </td>
                     </tr>
                 }
@@ -92,7 +94,7 @@ else
 <p>
     @if (paciente != null)
     {
-        @Html.ActionLink("Volver a Detalles", "DetallesPacientes", new { id = paciente.id_paciente }, new { @class = "btn btn-default" })
+        @Html.ActionLink("Volver a Detalles", "DetallesPacientes", new { id = paciente.id_paciente }, new { @class = "btn btn-success" })
     }
     @Html.ActionLink("Volver a Lista de Pacientes", "Index", null, new { @class = "btn btn-primary" })
 </p>

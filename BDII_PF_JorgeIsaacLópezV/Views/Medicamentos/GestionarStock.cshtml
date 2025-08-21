@@ -1,0 +1,139 @@
+﻿@model BDII_PF_JorgeIsaacLópezV.Models.Medicamentos
+
+@{
+    ViewBag.Title = "Gestionar Stock";
+}
+
+<h2>Gestionar Stock</h2>
+
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Mensaje"]
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Información del Medicamento</h3>
+    </div>
+    <div class="panel-body">
+        <dl class="dl-horizontal">
+            <dt>Medicamento:</dt>
+            <dd>@ViewBag.NombreMedicamento</dd>
+
+            <dt>Hospital:</dt>
+            <dd>@ViewBag.NombreHospital</dd>
+
+            <dt>Stock Actual:</dt>
+            <dd>
+                <strong>@ViewBag.StockActual unidades</strong>
+                @if ((int)ViewBag.StockActual <= 10)
+                {
+                    <span class="label label-warning">Stock Bajo</span>
+                }
+                else if ((int)ViewBag.StockActual == 0)
+                {
+                    <span class="label label-danger">Sin Stock</span>
+                }
+            </dd>
+        </dl>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    Agregar Stock
+                </h3>
+            </div>
+            <div class="panel-body">
+                @using (Html.BeginForm("AgregarStock", "Medicamentos"))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.Hidden("id", Model.id_medicamento)
+
+                    <div class="form-group">
+                        <label for="cantidadAgregar">Cantidad a agregar:</label>
+                        <input type="number" name="cantidadAgregar" id="cantidadAgregar"
+                               class="form-control" min="1" max="10000" required />
+                        <small class="help-block">Ingrese la cantidad de unidades a agregar al inventario</small>
+                    </div>
+
+                    <button type="submit" class="btn btn-success btn-block">
+                        <span class="glyphicon glyphicon-plus"></span>
+                        Agregar al Stock
+                    </button>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="panel panel-warning">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <span class="glyphicon glyphicon-minus"></span>
+                    Reducir Stock
+                </h3>
+            </div>
+            <div class="panel-body">
+                @using (Html.BeginForm("ReducirStock", "Medicamentos"))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.Hidden("id", Model.id_medicamento)
+
+                    <div class="form-group">
+                        <label for="cantidadReducir">Cantidad a reducir:</label>
+                        <input type="number" name="cantidadReducir" id="cantidadReducir"
+                               class="form-control" min="1" max="@ViewBag.StockActual" required />
+                        <small class="help-block">Máximo disponible: @ViewBag.StockActual unidades</small>
+                    </div>
+
+                    <button type="submit" class="btn btn-warning btn-block"
+                            onclick="return confirm('¿Está seguro de que desea reducir el stock?')">
+                        <span class="glyphicon glyphicon-minus"></span>
+                        Reducir Stock
+                    </button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<div class="form-group">
+    @Html.ActionLink("Ver Detalles", "Detalles", new { id = Model.id_medicamento }, new { @class = "btn btn-info" })
+    @Html.ActionLink("Editar Medicamento", "Edit", new { id = Model.id_medicamento }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("Regresar a la Lista", "Index", null, new { @class = "btn btn-outline-success" })
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('#cantidadReducir').on('input', function() {
+                var stockActual = @ViewBag.StockActual;
+                var cantidad = parseInt($(this).val());
+
+                if (cantidad > stockActual) {
+                    $(this).val(stockActual);
+                }
+            });
+
+            $('input[type="number"]').on('input', function() {
+                if (parseInt($(this).val()) < 1) {
+                    $(this).val(1);
+                }
+            });
+        });
+    </script>
+}

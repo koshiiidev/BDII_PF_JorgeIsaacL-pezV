@@ -136,9 +136,10 @@
 </div>
 
 
-<p class="text-center">
-    @Html.ActionLink("Editar", "EditarPaciente", new { id = Model.Id_Paciente }, new { @class = "btn btn-warning" })
-    @Html.ActionLink("Ver Citas", "Citas", new { id = Model.Id_Paciente }, new { @class = "btn btn-primary" })
-    @Html.ActionLink("Ver Pagos", "Pagos", new { id = Model.Id_Paciente }, new { @class = "btn btn-success" })
-    @Html.ActionLink("Volver a la Lista", "Index", null, new { @class = "btn btn-default" })
-</p>
+    <p class="text-center">
+        @Html.ActionLink("Editar", "EditarPaciente", new { id = Model.Id_Paciente }, new { @class = "btn btn-warning" })
+        @Html.ActionLink("Ver Citas", "Citas", new { id = Model.Id_Paciente }, new { @class = "btn btn-primary" })
+        @Html.ActionLink("Ver Pagos", "Pagos", new { id = Model.Id_Paciente }, new { @class = "btn btn-xs btn-primary" })
+        @Html.ActionLink("Volver a la Lista", "Index", null, new { @class = "btn btn-outline-success" })
+
+    </p>

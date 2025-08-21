@@ -1,0 +1,69 @@
+﻿@model BDII_PF_JorgeIsaacLópezV.Models.Citas
+
+@{
+    ViewBag.Title = "Crear Cita";
+}
+
+<h2>Crear Cita</h2>
+
+@if (TempData["Mensaje"] != null)
+{
+    string tipoMensaje = TempData["TipoMensaje"] as string ?? "info";
+    string claseAlerta = tipoMensaje == "error" ? "alert-danger" : "alert-success";
+
+    <div class="alert @claseAlerta alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        @TempData["Mensaje"]
+    </div>
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+    <h4>Cita Médica</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    @Html.HiddenFor(model => model.id_doctor)
+    @Html.HiddenFor(model => model.id_paciente)
+    @Html.HiddenFor(model => model.id_hospital)
+    @Html.HiddenFor(model => model.estado)
+    @Html.HiddenFor(model => model.fecha_creacion)
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.fecha, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.fecha, new { htmlAttributes = new { @class = "form-control", @type = "date" } })
+            @Html.ValidationMessageFor(model => model.fecha, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.hora, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.hora, new { htmlAttributes = new { @class = "form-control", @type = "time" } })
+            @Html.ValidationMessageFor(model => model.hora, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.diagnostico, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.TextAreaFor(model => model.diagnostico, new { htmlAttributes = new { @class = "form-control", rows = "4" } })
+            @Html.ValidationMessageFor(model => model.diagnostico, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Crear Cita" class="btn btn-primary" />
+        </div>
+    </div>
+</div>
+}
+
+<div>
+    @Html.ActionLink("Volver a Pacientes", "Pacientes", new { idDoctor = Model.id_doctor }, new { @class = "btn btn-danger"})
+</div>

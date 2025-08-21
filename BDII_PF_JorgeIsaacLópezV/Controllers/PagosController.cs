@@ -15,26 +15,64 @@ namespace BDII_PF_JorgeIsaacLópezV.Controllers
         public ActionResult Crear(int idTratamiento)
         {
             var t = db.Tratamientos
-                .Include("Cita.Paciente")
-                .Include("TratamientoMedicamentos.Medicamento")
+                .Include("Citas.Pacientes")
                 .FirstOrDefault(x => x.id_tratamiento == idTratamiento);
 
             if (t == null) return HttpNotFound();
+
+
+            var pagoExistente = db.Pagos.FirstOrDefault(p => p.id_tratamiento == idTratamiento);
+            if (pagoExistente != null)
+            {
+                TempData["Mensaje"] = "Este tratamiento ya tiene un pago procesado.";
+                TempData["TipoMensaje"] = "warning";
+                return RedirectToAction("DetallesCitas", "Citas", new { id = t.Citas.id_cita });
+            }
+
+
+            decimal montoTotal = t.costo;
+
+
+            if (montoTotal <= 0)
+            {
+                TempData["Mensaje"] = "No se puede procesar el pago. El tratamiento no tiene un costo válido.";
+                TempData["TipoMensaje"] = "error";
+                return RedirectToAction("DetallesCitas", "Citas", new { id = t.Citas.id_cita });
+            }
 
             var modelo = new PagoCreate
             {
                 IdTratamiento = t.id_tratamiento,
                 IdPaciente = t.Citas.id_paciente,
-                Monto = t.costo
+                IdCita = t.Citas.id_cita,
+                Monto = montoTotal,
+                Estado = "pagado", 
+                MetodoPago = "efectivo" 
             };
-
+            
             return View(modelo);
         }
 
         [HttpPost]
         public ActionResult Crear(PagoCreate modelo)
         {
+            if (Request.Form["Monto"] != null)
+            {
+                if (decimal.TryParse(Request.Form["Monto"].Replace(".", ","), out decimal montoConvertido))
+                {
+                    modelo.Monto = montoConvertido;
+                }
+            }
+
             if (!ModelState.IsValid) return View(modelo);
+
+            var pagoExistente = db.Pagos.FirstOrDefault(p => p.id_tratamiento == modelo.IdTratamiento);
+            if (pagoExistente != null)
+            {
+                TempData["Mensaje"] = "Este tratamiento ya tiene un pago procesado.";
+                TempData["TipoMensaje"] = "warning";
+                return RedirectToAction("DetallesCitas", "Citas", new { id = modelo.IdCita });
+            }
 
             var pago = new Pagos
             {
@@ -43,42 +81,55 @@ namespace BDII_PF_JorgeIsaacLópezV.Controllers
                 fecha = DateTime.Now,
                 monto = modelo.Monto,
                 metodo_pago = modelo.MetodoPago,
-                descripcion = modelo.Descripcion,
-                estado = modelo.Estado,
+                descripcion = modelo.Descripcion ?? "Pago procesado exitosamente",
+                estado = "pagado",
                 fecha_creacion = DateTime.Now
             };
+
             db.Pagos.Add(pago);
 
-            if (pago.estado == "pagado")
-            {
-                var tratamiento = db.Tratamientos
-                    .Include("TratamientoMedicamentos.Medicamento")
-                    .FirstOrDefault(x => x.id_tratamiento == modelo.IdTratamiento);
+            var tratamiento = db.Tratamientos
+                .Include("Tratamiento_Medicamento.Medicamentos")
+                .FirstOrDefault(x => x.id_tratamiento == modelo.IdTratamiento);
 
+            if (tratamiento != null && tratamiento.Tratamiento_Medicamento != null)
+            {
                 foreach (var tm in tratamiento.Tratamiento_Medicamento)
                 {
                     if (tm.Medicamentos.stock < tm.cantidad)
                     {
-                        ModelState.AddModelError("", $"No hay suficiente stock de {tm.Medicamentos.nombre}");
+                        ModelState.AddModelError("", $"No hay suficiente stock de {tm.Medicamentos.nombre}. Stock disponible: {tm.Medicamentos.stock}");
                         return View(modelo);
                     }
                     tm.Medicamentos.stock -= tm.cantidad;
                 }
             }
 
-            db.SaveChanges();
-            return RedirectToAction("Detalles", new { id = pago.id_pago });
+            try
+            {
+                db.SaveChanges();
+                TempData["Mensaje"] = "Pago procesado exitosamente.";
+                TempData["TipoMensaje"] = "success";
+                return RedirectToAction("Detalles", new { id = pago.id_pago });
+            }
+            catch (Exception ex)
+            {
+                TempData["Mensaje"] = "Error al procesar el pago: " + ex.Message;
+                TempData["TipoMensaje"] = "error";
+                return View(modelo);
+            }
         }
 
         public ActionResult Detalles(int id)
         {
-            var p = db.Pagos.Include("Paciente").FirstOrDefault(x => x.id_pago == id);
+            var p = db.Pagos.Include("Pacientes").FirstOrDefault(x => x.id_pago == id);
             if (p == null) return HttpNotFound();
 
             var vm = new PagoDetalle
             {
                 IdPago = p.id_pago,
                 IdTratamiento = p.id_tratamiento ?? 0,
+                IdPaciente = p.id_paciente,
                 Paciente = p.Pacientes.nombre,
                 Fecha = p.fecha.ToString("dd/MM/yyyy"),
                 Monto = p.monto,
@@ -88,6 +139,12 @@ namespace BDII_PF_JorgeIsaacLópezV.Controllers
             };
 
             return View(vm);
+        }
+
+
+        public bool TratamientoFuePagado(int idTratamiento)
+        {
+            return db.Pagos.Any(p => p.id_tratamiento == idTratamiento && p.estado == "pagado");
         }
     }
 }

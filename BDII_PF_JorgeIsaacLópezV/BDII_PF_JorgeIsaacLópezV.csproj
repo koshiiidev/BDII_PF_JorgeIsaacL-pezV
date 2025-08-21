@@ -130,8 +130,10 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\CitasController.cs" />
+    <Compile Include="Controllers\DoctoresController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\HospitalesController.cs" />
+    <Compile Include="Controllers\MedicamentosController.cs" />
     <Compile Include="Controllers\PacientesController.cs" />
     <Compile Include="Controllers\PagosController.cs" />
     <Compile Include="Controllers\TratamientosController.cs" />
@@ -286,12 +288,28 @@
     <Content Include="Views\Citas\EditarCita.cshtml" />
     <Content Include="Views\Citas\_DoctoresDropdown.cshtml" />
     <Content Include="Views\Citas\_PacientesDropdown.cshtml" />
+    <Content Include="Views\Doctores\Index.cshtml" />
+    <Content Include="Views\Doctores\CrearDoctor.cshtml" />
+    <Content Include="Views\Doctores\EditarDoctores.cshtml" />
+    <Content Include="Views\Doctores\DetallesDoctores.cshtml" />
+    <Content Include="Views\Doctores\Pacientes.cshtml" />
+    <Content Include="Views\Doctores\CrearCita.cshtml" />
+    <Content Include="Views\Doctores\CrearTratamiento.cshtml" />
+    <Content Include="Views\Doctores\DetallesTratamiento.cshtml" />
+    <Content Include="Views\Tratamientos\Crear.cshtml" />
+    <Content Include="Views\Tratamientos\Detalles.cshtml" />
+    <Content Include="Views\Pagos\Crear.cshtml" />
+    <Content Include="Views\Pagos\Detalles.cshtml" />
+    <Content Include="Views\Medicamentos\Index.cshtml" />
+    <Content Include="Views\Medicamentos\Detalles.cshtml" />
+    <Content Include="Views\Medicamentos\Crear.cshtml" />
+    <Content Include="Views\Medicamentos\Editar.cshtml" />
+    <Content Include="Views\Medicamentos\GestionarStock.cshtml" />
+    <Content Include="Views\Medicamentos\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Hospital\" />
-    <Folder Include="Views\Pagos\" />
-    <Folder Include="Views\Tratamientos\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />
